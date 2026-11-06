@@ -1,0 +1,17 @@
+# Compiled Binaries and Objects
+*.o
+*.out
+a.out
+glsa_run
+demo_executable
+
+# Build Directories
+build/
+bin/
+
+# IDE and Text Editor Folders
+.vscode/
+.idea/
+*.swp
+*.swo
+.clangd/
