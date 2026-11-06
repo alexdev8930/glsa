@@ -18,7 +18,7 @@ If you find a bug or have a feature idea, just open an issue on the repo. Explai
 - Fork the repo and make a new branch.
 - Keep your changes focused on fixing one specific thing.
 - Make sure it compiles smoothly with C++17 on Linux using `g++`.
-- If you add a new public function to the `glsa::` namespace.
+- If you add a new public function to the `glsa::` namespace document it in [docs/api_spec.md](docs/api_spec.md).
 
 ## Code of Conduct
 
