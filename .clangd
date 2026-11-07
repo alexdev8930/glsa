@@ -3,4 +3,7 @@ CompileFlags:
 
 Diagnostics:
   UnusedIncludes: Strict
+  ClangTidy:
+    Add: [bugprone-*, modernize-*, performance-*, readability-*]
+    Remove: [modernize-use-trailing-return-type, readability-magic-numbers, readability-implicit-bool-conversion]
 

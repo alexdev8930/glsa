@@ -6,26 +6,26 @@
 #include <glsa/glsa.h>
 
 int main() {
-    if (!glfwInit()) {
+    if (glfwInit() == GLFW_FALSE) {
         return -1;
     }
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "GLSA Demo", nullptr, nullptr);
 
-    if (!window) {
+    if (window == nullptr) {
         glfwTerminate();
         return -1;
     }
 
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
         glfwDestroyWindow(window);
         glfwTerminate();
         return -1;
     }
 
-    while (!glfwWindowShouldClose(window)) {
+    while (glfwWindowShouldClose(window) == 0) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);

@@ -7,11 +7,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(CMAKE_EXPORT_COMPILE_COMMANDS)
-    execute_process(
-        COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_BINARY_DIR}/compile_commands.json
-            ${CMAKE_SOURCE_DIR}/compile_commands.json
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+if(CLANG_TIDY_EXE)
+    set(CMAKE_CXX_CLANG_TIDY 
+        ${CLANG_TIDY_EXE}
+        "-checks=bugprone-*,modernize-*,performance-*,readability-*,-modernize-use-trailing-return-type,-readability-magic-numbers,-readability-implicit-bool-conversion"
+        "-warnings-as-errors=*"
+        "-header-filter=${CMAKE_CURRENT_SOURCE_DIR}/include/glsa/.*"
     )
 endif()
 

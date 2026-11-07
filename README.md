@@ -56,15 +56,6 @@ sudo dnf check-update && sudo dnf install clang glfw-devel glm-devel
 
 To build and run the provided demo project, navigate to the `examples` folder and use CMake. This will automatically download and generate GLAD for you.
 
-### Generate the build folder
-
 ```bash
-cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
-```
-
-### Build Examples and Run
-
-```bash
-cmake --build build
-./build/examples/glsa_demo
+make run
 ```
