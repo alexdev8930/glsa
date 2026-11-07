@@ -66,5 +66,5 @@ cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang
 
 ```bash
 cmake --build build
-./build/glsa_demo
+./build/examples/glsa_demo
 ```
