@@ -1,0 +1,120 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+
+
+# --- Core Layout ---
+BreakAfterReturnType: None
+ColumnLimit: 100
+IndentWidth: 4
+ContinuationIndentWidth: 4
+TabWidth: 4
+AccessModifierOffset: 0
+UseTab: Never
+
+# --- Braces and Blocks ---
+BreakBeforeBraces: Attach
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterObjCDeclaration: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+
+InsertBraces: true
+RemoveBracesLLVM: false
+
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+# --- Indentation and Alignment ---
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+AlignEscapedNewlines: Left
+AlignOperands: Align
+AlignTrailingComments: true
+
+IndentCaseLabels: true
+IndentCaseBlocks: false
+IndentGotoLabels: false
+IndentPPDirectives: None
+NamespaceIndentation: None
+
+# --- Spacing ---
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# --- Pointers and References ---
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+# --- Function Arguments & Bin Packing ---
+BinPackArguments: true
+BinPackParameters: true
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+
+SortIncludes: CaseSensitive
+IncludeBlocks: Merge
+IncludeIsMainRegex: "$^"
+
+IncludeCategories:
+
+  # No-extension system headers (e.g. <iostream>)
+  - Regex:           '^<[a-z0-9_]+>$'
+    Priority:        1
+
+  # GLAD (always immediately after no-extension headers)
+  - Regex:           '^<glad/'
+    Priority:        2
+
+  # Other system / library headers
+  - Regex:           '^<.*'
+    Priority:        3
+
+  # Local headers without directories
+  - Regex:           '^"[^/]*$'
+    Priority:        4
+
+  # Local headers with directories
+  - Regex:           '^".*/.*'
+    Priority:        5
+
+# --- Miscellaneous Aesthetics ---
+FixNamespaceComments: true
+ReflowComments: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+...
+
