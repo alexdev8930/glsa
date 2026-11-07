@@ -1,12 +1,12 @@
 # Contributing to GLSA
 
-Thanks for wanting to help out with GLSA! Since this is a single-header library, the goal is to keep things simple, fast, and organized.
+Thanks for wanting to help out with GLSA! 
 
 ## Rules for code changes
 
 If you want to add code or make a change, please keep these guidelines in mind:
-- **Keep it single-header:** All the main library logic has to stay inside `include/glsa/glsa.h` using the `GLSA_IMPLEMENTATION` guard. Don't add extra `.cpp` files to the library.
-- **Don't add bloat:** We use OpenGL, GLAD, and GLM. Don't introduce heavy third-party libraries outside of those.
+- **Keep it header-only:** The library can be split across multiple headers, but it must not require a separately compiled `.cpp` file. Put implementation definitions behind the `GLSA_IMPLEMENTATION` guard and define it in exactly one source file.
+- **Keep dependencies minimal:** Don’t add a third-party dependency to the library without checking with me first. The core uses OpenGL, GLAD, and GLM; GLFW is used by the examples.    
 - **Use the GPU:** Features should rely on native GLSL shaders handled behind the scenes, not slow CPU pixel loops.
 
 ## How to help
