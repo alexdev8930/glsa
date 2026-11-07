@@ -17,6 +17,7 @@ This repo is intentionally small. Most of the work lives in one header (maybe mo
 
 - `include/glsa/glsa.h` - Main library header.
 - `examples/` - Example programs demonstrating GLSA.
+- `docs/` - Documentation about GLSA
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules.   
 See [CHANGELOG.md](CHANGELOG.md) for official release history
