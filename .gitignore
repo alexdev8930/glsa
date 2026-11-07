@@ -2,8 +2,6 @@
 *.o
 *.out
 a.out
-glsa_run
-demo_executable
 
 # Build Directories
 build/
@@ -15,3 +13,4 @@ bin/
 *.swp
 *.swo
 .clangd/
+.compile_commands.json
