@@ -4,7 +4,7 @@ GLSA is a C++ rendering library built on OpenGL. It provides functions for drawi
 
 ## What it gives you
 
-- Single-header C++ API
+- Header-only C++ API
 - Render through C++ functions without writing shader code yourself
 - Built-in helpers for common shapes like circles and rectangles (3D later)
 - Less boilerplate for common rendering tasks
@@ -13,52 +13,58 @@ GLSA is a C++ rendering library built on OpenGL. It provides functions for drawi
 
 ## Project layout
 
-This repo is intentionally small. Most of the work lives in one header:
+This repo is intentionally small. Most of the work lives in one header (maybe more later):
 
-- `include/glsa/glsa.h` - the main header
+- `include/glsa/glsa.h` - Main library header.
+- `examples/` - Example programs demonstrating GLSA.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules.   
+See [CHANGELOG.md](CHANGELOG.md) for official release history
+See [api_spec.md](docs/api_spec.md) for the API specification.    
 
 > [!NOTE]
 > The main header file is still being built so the GLSA API is not usable yet.
 
-## Quick start (Once the main header file has a basic implementation)
+## Dependencies
 
-Define `GLSA_IMPLEMENTATION` in one C++ file, usually `main.cpp`, before including the header. That injects the implementation code where it belongs.
+To build and run this project, you need the following dependencies available on your system:
 
-```cpp
-#include <glad/glad.h> 
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>   
+- **Compiler:** Clang (supporting C++17 or newer)
+- **Math Library:** GLM (OpenGL Mathematics)
+- **Windowing/Input:** GLFW
+- **Graphics API:** OpenGL 3.3 Core Profile drivers
+- **OpenGL Loader:** GLAD
 
-#define GLSA_IMPLEMENTATION
-#include <glsa/glsa.h>
+## Installation Commands (Linux)
 
-int main() {
-    glfwInit();
-    GLFWwindow* window = glfwCreateWindow(800, 600, "GLSA Demo", NULL, NULL);
-    glfwMakeContextCurrent(window);
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
-    glsa::init(800, 600);
-
-    while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glsa::drawCircle(400.0f, 300.0f, 75.0f, glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    glsa::shutdown();
-    glfwTerminate();
-    return 0;
-}
+**Debian / Ubuntu / Mint / Pop!_OS:**
+```bash
+sudo apt update && sudo apt install clang libglfw3-dev libglm-dev
 ```
 
-## Requirements
+**Arch Linux / Manjaro**
+```bash
+sudo pacman -Syu && sudo pacman -S clang glfw glm
+```
 
-- C++17 or newer
-- OpenGL 3.3 Core Profile or newer
-- GLAD 
+**Fedora:**
+```bash
+sudo dnf check-update && sudo dnf install clang glfw-devel glm-devel
+```
 
+## Running the examples
 
+To build and run the provided demo project, navigate to the `examples` folder and use CMake. This will automatically download and generate GLAD for you.
+
+### Generate the build folder
+
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+```
+
+### Build Examples and Run
+
+```bash
+cmake --build build
+./build/glsa_demo
+```
