@@ -26,39 +26,71 @@ See [api_spec.md](docs/api_spec.md) for the API specification.
 > [!NOTE]
 > The main header file is still being built so the GLSA API is not usable yet.
 
-## Dependencies
+## Dependency Management
 
-To build and run the example on Linux, install:
+GLFW and GLM are declared in `vcpkg.json` and installed automatically by CMake in manifest mode. The vcpkg registry baseline pins their versions. GLAD is fetched at a pinned version by CMake and generated during the build, which requires Python 3. GLAD is generated through OpenGL 4.6; the intended support range is OpenGL 3.3-4.6 on Windows/Linux and 3.3-4.1 on macOS. A generated loader does not guarantee that a context supports every function: GLSA must check the active context version before using newer features. No OpenGL development package is directly linked by this example; an OpenGL-capable graphics driver is required at runtime.
 
-- **Compiler:** Clang with C++17 support.
-- **Build system:** CMake.
-- **Build tools:** GNU Make and Ninja are needed for the `make run` shortcut. They are optional if you configure and build with CMake directly using another generator.
-- **GLAD generator:** Python 3. CMake downloads and builds GLAD automatically, but GLAD's build uses Python to generate its loader.
-- **FetchContent:** Git, used by CMake to download GLAD.
-- **Libraries:** GLFW, GLM, and OpenGL development files.
-- **Runtime:** An OpenGL 3.3-capable graphics driver.
+You need CMake 3.21 or newer, Git, Python 3, vcpkg, and a C++17 compiler. The Linux preset uses Clang and Ninja; the Windows preset uses Visual Studio 2022 and MSVC.
 
-## Linux Installation Commands
+## Setup
 
-**Debian / Ubuntu / Mint / Pop!_OS:**
+### Linux
+
+Install the build tools for your distribution:
+
+**Debian / Ubuntu:**
+
 ```bash
-sudo apt update && sudo apt install clang cmake make ninja-build python3 git libglfw3-dev libglm-dev libgl1-mesa-dev
+sudo apt update && sudo apt install build-essential clang cmake ninja-build python3 git curl zip unzip tar pkg-config autoconf autoconf-archive automake libtool
 ```
 
-**Arch Linux / Manjaro**
+**Arch Linux:**
+
 ```bash
-sudo pacman -Syu && sudo pacman -S clang cmake make ninja python git glfw glm mesa
+sudo pacman -Syu
+sudo pacman -S --needed base-devel clang cmake ninja python git curl zip unzip tar pkgconf autoconf autoconf-archive automake libtool
 ```
 
 **Fedora:**
-```bash
-sudo dnf check-update && sudo dnf install clang cmake make ninja-build python3 git glfw-devel glm-devel mesa-libGL-devel
-```
-
-## Running the examples
-
-To build and run the provided demo project use this command down below. This will also automatically download and build GLAD for you.
 
 ```bash
-make run
+sudo dnf group install "Development Tools"
+sudo dnf install clang cmake ninja-build python3 git curl zip unzip tar pkgconf-pkg-config autoconf autoconf-archive automake libtool
 ```
+
+Install vcpkg once by cloning and bootstrapping its official repository. CMake then reads `vcpkg.json` and installs the pinned GLFW and GLM versions automatically:
+
+```bash
+git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
+"$HOME/vcpkg/bootstrap-vcpkg.sh"
+export VCPKG_ROOT="$HOME/vcpkg"
+cmake --preset linux
+cmake --build --preset linux
+```
+
+The first configure downloads and builds the declared dependencies. Build explicitly with `make linux`, or use `make run` to build and launch the demo. You can also use the CMake preset commands directly.
+
+#### OpenGL Runtime Driver
+
+GLAD is only the function loader; it does not provide an OpenGL implementation. You need a driver that supports the OpenGL version your program requests. If your system does not already have a suitable GPU-vendor driver, Mesa's runtime drivers can be installed with:
+
+- Debian / Ubuntu: `sudo apt install libgl1-mesa-dri`
+- Arch Linux: `sudo pacman -S mesa`
+- Fedora: `sudo dnf install mesa-dri-drivers`
+
+These are runtime drivers, not GLAD build dependencies. Do not install them if you already use a suitable proprietary GPU driver.
+
+### Windows
+
+Install Visual Studio 2022 with the **Desktop development with C++** workload, plus CMake, Git, and Python 3. Then bootstrap vcpkg from PowerShell:
+
+```powershell
+git clone https://github.com/microsoft/vcpkg C:\vcpkg
+& C:\vcpkg\bootstrap-vcpkg.bat
+$env:VCPKG_ROOT = "C:\vcpkg"
+cmake --preset windows-msvc
+cmake --build --preset windows-msvc
+```
+
+The first CMake configure installs GLFW and GLM from the manifest automatically.
+With GNU Make installed, build the MSVC preset with `make windows` instead of running the two CMake commands separately.

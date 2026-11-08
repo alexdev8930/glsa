@@ -6,6 +6,7 @@ a.out
 # Build Directories
 build/
 bin/
+vcpkg_installed/
 
 # IDE and Text Editor Folders
 .vscode/

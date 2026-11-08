@@ -2,7 +2,7 @@
 include(FetchContent)
 
 set(GLAD_PROFILE "core" CACHE STRING "" FORCE)
-set(GLAD_API "gl=3.3" CACHE STRING "" FORCE)
+set(GLAD_API "gl=4.6" CACHE STRING "" FORCE)
 set(GLAD_GENERATOR "c" CACHE STRING "" FORCE)
 
 FetchContent_Declare(
@@ -14,9 +14,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glad)
 
 # Dependencies
-find_package(OpenGL REQUIRED)
-find_package(glfw3 REQUIRED)
-find_package(glm REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 # Example executable
 add_executable(glsa_demo example.cpp)
@@ -29,5 +28,4 @@ target_link_libraries(glsa_demo PRIVATE
     glad
     glfw
     glm::glm
-    OpenGL::GL
 )
