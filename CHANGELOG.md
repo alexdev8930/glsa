@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 Versioning uses [semver](https://semver.org).
 
-## [Unreleased]
+## Unreleased
 
 ### Added
 - Added the initial `glsa.h` header scaffold with C++17, platform, and OpenGL version checks, plus the documented `glsa::init` declaration.
