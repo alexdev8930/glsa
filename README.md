@@ -57,7 +57,7 @@ sudo dnf check-update && sudo dnf install clang cmake make ninja-build python3 g
 
 ## Running the examples
 
-To build and run the provided demo project, navigate to the `examples` folder and use CMake. This will automatically download and generate GLAD for you.
+To build and run the provided demo project use this command down below. This will also automatically download and build GLAD for you.
 
 ```bash
 make run
