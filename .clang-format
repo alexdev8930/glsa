@@ -53,7 +53,7 @@ AlignTrailingComments: true
 IndentCaseLabels: true
 IndentCaseBlocks: false
 IndentGotoLabels: false
-IndentPPDirectives: None
+IndentPPDirectives: BeforeHash
 NamespaceIndentation: None
 
 # --- Spacing ---
@@ -66,6 +66,7 @@ SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: true
+SpacesBeforeTrailingComments: 1
 SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
 SpacesInAngles: false

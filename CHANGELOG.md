@@ -6,6 +6,7 @@ Versioning uses [semver](https://semver.org).
 ## [Unreleased]
 
 ### Added
+- Added the initial `glsa.h` header scaffold with C++17, platform, and OpenGL version checks, plus the documented `glsa::init` declaration.
 - Added a cross-platform CMake `run-examples` target for building and launching the demo.
 - Added GitHub Actions builds for Linux and Windows/MSVC.
 - Enabled both X11 and Wayland GLFW backends on Linux.
@@ -14,6 +15,7 @@ Versioning uses [semver](https://semver.org).
 - Added ClangFormat and clangd config files, along with the MIT license and contribution guide.
 
 ### Changed
+- Configured clang-format to indent preprocessor directives with spaces.
 - CMake now runs clang-tidy when it is installed.
 - The example checks GLFW, window creation, and GLAD initialization before continuing.
 - CMake presets locate vcpkg in the standard per-user directory without requiring a `VCPKG_ROOT` export.
