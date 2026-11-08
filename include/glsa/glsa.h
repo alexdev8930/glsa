@@ -95,4 +95,10 @@ bool init(int width, int height);
 
 #endif // GLSA_IMPLEMENTATION
 
+#undef GLSA_PLATFORM_WINDOWS
+#undef GLSA_PLATFORM_MACOS
+#undef GLSA_PLATFORM_LINUX
+#undef GLSA_MAX_GL_MAJOR
+#undef GLSA_MAX_GL_MINOR
+
 #endif // GLSA_GLSA_H
