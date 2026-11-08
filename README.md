@@ -63,12 +63,11 @@ Install vcpkg once by cloning and bootstrapping its official repository. CMake t
 ```bash
 git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
 "$HOME/vcpkg/bootstrap-vcpkg.sh"
-export VCPKG_ROOT="$HOME/vcpkg"
 cmake --preset linux
-cmake --build --preset linux
+cmake --build --preset linux --target run-examples
 ```
 
-The first configure downloads and builds the declared dependencies. Build explicitly with `make linux`, or use `make run` to build and launch the demo. You can also use the CMake preset commands directly.
+The first configure downloads and builds the declared dependencies. After configuring, run `cmake --build --preset linux --target run-examples` to build and launch the demo. To build without launching it, run `cmake --build --preset linux`.
 
 #### OpenGL Runtime Driver
 
@@ -85,12 +84,10 @@ These are runtime drivers, not GLAD build dependencies. Do not install them if y
 Install Visual Studio 2022 with the **Desktop development with C++** workload, plus CMake, Git, and Python 3. Then bootstrap vcpkg from PowerShell:
 
 ```powershell
-git clone https://github.com/microsoft/vcpkg C:\vcpkg
-& C:\vcpkg\bootstrap-vcpkg.bat
-$env:VCPKG_ROOT = "C:\vcpkg"
+git clone https://github.com/microsoft/vcpkg "$env:USERPROFILE\vcpkg"
+& "$env:USERPROFILE\vcpkg\bootstrap-vcpkg.bat"
 cmake --preset windows-msvc
-cmake --build --preset windows-msvc
+cmake --build --preset windows-msvc --target run-examples
 ```
 
-The first CMake configure installs GLFW and GLM from the manifest automatically.
-With GNU Make installed, build the MSVC preset with `make windows` instead of running the two CMake commands separately.
+The first CMake configure installs GLFW and GLM from the manifest automatically. After configuring, run `cmake --build --preset windows-msvc --target run-examples` to build and launch the demo. To build without launching it, run `cmake --build --preset windows-msvc`.

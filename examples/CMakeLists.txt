@@ -29,3 +29,11 @@ target_link_libraries(glsa_demo PRIVATE
     glfw
     glm::glm
 )
+
+add_custom_target(run-examples
+    COMMAND "$<TARGET_FILE:glsa_demo>"
+    DEPENDS glsa_demo
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:glsa_demo>"
+    USES_TERMINAL
+    VERBATIM
+)
