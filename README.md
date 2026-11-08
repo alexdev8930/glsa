@@ -28,29 +28,31 @@ See [api_spec.md](docs/api_spec.md) for the API specification.
 
 ## Dependencies
 
-To build and run this project, you need the following dependencies available on your system:
+To build and run the example on Linux, install:
 
-- **Compiler:** Clang (supporting C++17 or newer)
-- **Math Library:** GLM (OpenGL Mathematics)
-- **Windowing/Input:** GLFW
-- **Graphics API:** OpenGL 3.3 Core Profile drivers
-- **OpenGL Loader:** GLAD
+- **Compiler:** Clang with C++17 support.
+- **Build system:** CMake.
+- **Build tools:** GNU Make and Ninja are needed for the `make run` shortcut. They are optional if you configure and build with CMake directly using another generator.
+- **GLAD generator:** Python 3. CMake downloads and builds GLAD automatically, but GLAD's build uses Python to generate its loader.
+- **FetchContent:** Git, used by CMake to download GLAD.
+- **Libraries:** GLFW, GLM, and OpenGL development files.
+- **Runtime:** An OpenGL 3.3-capable graphics driver.
 
-## Installation Commands (Linux)
+## Linux Installation Commands
 
 **Debian / Ubuntu / Mint / Pop!_OS:**
 ```bash
-sudo apt update && sudo apt install clang libglfw3-dev libglm-dev
+sudo apt update && sudo apt install clang cmake make ninja-build python3 git libglfw3-dev libglm-dev libgl1-mesa-dev
 ```
 
 **Arch Linux / Manjaro**
 ```bash
-sudo pacman -Syu && sudo pacman -S clang glfw glm
+sudo pacman -Syu && sudo pacman -S clang cmake make ninja python git glfw glm mesa
 ```
 
 **Fedora:**
 ```bash
-sudo dnf check-update && sudo dnf install clang glfw-devel glm-devel
+sudo dnf check-update && sudo dnf install clang cmake make ninja-build python3 git glfw-devel glm-devel mesa-libGL-devel
 ```
 
 ## Running the examples
