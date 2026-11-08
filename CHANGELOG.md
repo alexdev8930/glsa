@@ -8,6 +8,7 @@ Versioning uses [semver](https://semver.org).
 ### Added
 - Added a cross-platform CMake `run-examples` target for building and launching the demo.
 - Added GitHub Actions builds for Linux and Windows/MSVC.
+- Enabled both X11 and Wayland GLFW backends on Linux.
 - Added a GLFW window example to test the OpenGL and CMake setup.
 - Started the API spec with the planned `glsa::init` requirements and return value.
 - Added ClangFormat and clangd config files, along with the MIT license and contribution guide.
