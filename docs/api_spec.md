@@ -4,8 +4,8 @@
 
 ### `glsa::init`
 
-Initializes GLSA's rendering resources for the given render size. Call it after creating and activating an OpenGL context and initializing GLAD. Returns `true` on success and `false` if initialization fails.
+Initializes the GLSA runtime context and loads OpenGL function pointers for the given render size. Before calling it, initialize a valid GLFW window and OpenGL context, then make that context current on the active thread. Returns `true` if GLAD loads the function addresses successfully and the driver context satisfies the supported core OpenGL version limits. Returns `false` if function address loading fails or the driver version is below the minimum supported threshold.
 
 ```cpp
-GLSA_API bool init(int width, int height);
+bool init(int width, int height);
 ```
