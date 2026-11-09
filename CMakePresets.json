@@ -21,6 +21,17 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{USERPROFILE}/vcpkg/scripts/buildsystems/vcpkg.cmake"
       }
+    },
+    {
+      "name": "macos",
+      "displayName": "MacOS with vcpkg and Ninja",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/macos",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_TOOLCHAIN_FILE": "$env{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+      }
     }
   ],
   "buildPresets": [
@@ -32,6 +43,10 @@
       "name": "windows-msvc",
       "configurePreset": "windows-msvc",
       "configuration": "Debug"
+    },
+    {
+      "name": "macos",
+      "configurePreset": "macos"
     }
   ]
 }

@@ -62,3 +62,27 @@ jobs:
 
       - name: Build
         run: cmake --build --preset windows-msvc
+
+  macos:
+    name: MacOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install build prerequisites
+        run: |
+          brew update
+          brew install cmake ninja python git curl zip unzip pkgconf autoconf autoconf-archive automake libtool
+
+      - name: Set up vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
+          "$HOME/vcpkg/bootstrap-vcpkg.sh" -disableMetrics
+
+      - name: Configure
+        run: cmake --preset macos
+
+      - name: Build
+        run: cmake --build --preset macos

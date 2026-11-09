@@ -32,7 +32,7 @@ GLFW and GLM are declared in `vcpkg.json` and installed automatically by CMake i
 
 You need CMake 3.21 or newer, Git, Python 3, vcpkg, and a C++17 compiler. The Linux preset uses Clang and Ninja; the Windows preset uses Visual Studio 2022 and MSVC.
 
-## Setup
+## Setup 
 
 ### Linux
 
@@ -63,11 +63,14 @@ Install vcpkg once by cloning and bootstrapping its official repository. CMake t
 ```bash
 git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
 "$HOME/vcpkg/bootstrap-vcpkg.sh"
+```
+
+Configure the project to install the dependencies declared in vcpkg.json, then build and launch the examples:
+
+```bash
 cmake --preset linux
 cmake --build --preset linux --target run-examples
 ```
-
-The first configure downloads and builds the declared dependencies. After configuring, run `cmake --build --preset linux --target run-examples` to build and launch the demo. To build without launching it, run `cmake --build --preset linux`.
 
 #### OpenGL Runtime Driver
 
@@ -86,8 +89,48 @@ Install Visual Studio 2022 with the **Desktop development with C++** workload, p
 ```powershell
 git clone https://github.com/microsoft/vcpkg "$env:USERPROFILE\vcpkg"
 & "$env:USERPROFILE\vcpkg\bootstrap-vcpkg.bat"
+```
+
+Configure the project to install the dependencies declared in vcpkg.json, then build and launch the examples:
+
+```powershell
 cmake --preset windows-msvc
 cmake --build --preset windows-msvc --target run-examples
 ```
 
-The first CMake configure installs GLFW and GLM from the manifest automatically. After configuring, run `cmake --build --preset windows-msvc --target run-examples` to build and launch the demo. To build without launching it, run `cmake --build --preset windows-msvc`.
+### MacOS
+
+Install Apple's command-line development tools, CMake/vcpkg tools, and the required build utilities. macOS provides its own native windowing system, so you do not need X11 or Wayland development packages.
+
+Install Xcode Command Line Tools:
+
+```bash
+xcode-select --install
+```
+Install Homebrew if it is not already installed. Then install the required tools:
+
+```bash
+brew update
+brew install cmake ninja python git curl zip unzip pkgconf autoconf autoconf-archive automake libtool
+```
+
+Apple Clang is included with Xcode Command Line Tools. Verify your installation:
+
+```bash
+clang --version
+clang++ --version
+```
+
+Install vcpkg once by cloning and bootstrapping its official repository. CMake then reads vcpkg.json and installs the pinned GLFW and GLM versions automatically:
+
+```bash
+git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
+"$HOME/vcpkg/bootstrap-vcpkg.sh"
+```
+
+Configure the project to install the dependencies declared in vcpkg.json, then build and launch the examples:
+
+```bash
+cmake --preset macos
+cmake --build --preset macos --target run-examples
+```
