@@ -72,20 +72,27 @@
 namespace glsa {
 
 /**
- * @brief Initializes the GLSA runtime context and loads OpenGL function pointers
- *
- * @param width The initial width of the rendering area or window viewport
- * @param height The initial height of the rendering area or window viewport
- *
- * @pre A valid window and OpenGL context (via GLFW) MUST be initialized
- *      and made current on the active thread before calling this function
- *
- * @return true If the graphics loader bound successfully and the system driver
- *              context satisfies your core major/minor version limits.
- * @return false If GLAD fails to parse function addresses or if the driver version
- *               falls below your minimum threshold floor.
+ * @brief Simple configuration structure for uniform dimensions.
  */
-bool init(int width, int height);
+struct Extent2D {
+    int width;
+    int height;
+};
+
+/**
+ * @brief Initializes the GLSA runtime context with initial rendering bounds.
+ *
+ * @param initial_extent The initial configuration dimensions (width and height) of the target rendering area.
+ *
+ * @pre A valid OpenGL context must be made current on the active thread, and an external OpenGL 
+ *      function loader (such as GLAD or GLEW) MUST have successfully resolved function pointers 
+ *      before calling this function.
+ *
+ * @return true  If the provided dimensions are valid and core OpenGL shader function pointers are verified as loaded.
+ * @return false If width or height are invalid (<= 0), or if core OpenGL function pointers are missing, 
+ *               indicating that the application's loader sequence was skipped or failed.
+ */
+bool init(Extent2D initial_extent);
 
 } // namespace glsa
 
