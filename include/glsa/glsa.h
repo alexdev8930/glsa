@@ -82,18 +82,24 @@ namespace glsa {
  *
  * @return true If the graphics loader bound successfully and the system driver
  *              context satisfies your core major/minor version limits.
- * @return false If GLAD fails to parse function addresses or if the driver version 
+ * @return false If GLAD fails to parse function addresses or if the driver version
  *               falls below your minimum threshold floor.
  */
 bool init(int width, int height);
 
 } // namespace glsa
 
-#ifdef GLSA_IMPLEMENTATION
+// clang-format off
+#if defined(GLSA_IMPLEMENTATION) || defined(GLSA_CLANGD_IMPLEMENTATION)
 
+#include <glad/glad.h>
+
+namespace glsa {
     // Implementation goes here
+}
 
-#endif // GLSA_IMPLEMENTATION
+#endif // GLSA_IMPLEMENTATION || GLSA_CLANGD_IMPLEMENTATION
+// clang-format on
 
 #undef GLSA_PLATFORM_WINDOWS
 #undef GLSA_PLATFORM_MACOS
