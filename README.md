@@ -24,7 +24,7 @@ See [CHANGELOG.md](CHANGELOG.md) for official release history
 See [api_spec.md](docs/api_spec.md) for the API specification.    
 
 > [!NOTE]
-> The main header file is still being built so the GLSA API is not usable yet.
+> There are only a few functions in the GLSA API because its in its early stage
 
 ## Dependency Management
 

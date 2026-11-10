@@ -17,8 +17,6 @@
  *
  * @dependencies
  * - GLFW
- * - GLAD
- * - GLM
  *
  * @copyright Copyright (c) 2026 AlexDev
  * @license MIT
@@ -75,35 +73,66 @@ namespace glsa {
  * @brief Simple configuration structure for uniform dimensions.
  */
 struct Extent2D {
-    int width;
-    int height;
+    int width;  /**< Width component, in pixels or units. Must be > 0. */
+    int height; /**< Height component, in pixels or units. Must be > 0. */
 };
 
 /**
  * @brief Initializes the GLSA runtime context with initial rendering bounds.
  *
- * @param initial_extent The initial configuration dimensions (width and height) of the target rendering area.
+ * @param initial_extent The initial configuration dimensions (width and height) of the target
+ * rendering area.
  *
- * @pre A valid OpenGL context must be made current on the active thread, and an external OpenGL 
- *      function loader (such as GLAD or GLEW) MUST have successfully resolved function pointers 
+ * @pre A valid OpenGL context must be made current on the active thread, and an external OpenGL
+ *      function loader (such as GLAD or GLEW) MUST have successfully resolved function pointers
  *      before calling this function.
  *
- * @return true  If the provided dimensions are valid and core OpenGL shader function pointers are verified as loaded.
- * @return false If width or height are invalid (<= 0), or if core OpenGL function pointers are missing, 
- *               indicating that the application's loader sequence was skipped or failed.
+ * @return true  If the provided dimensions are valid and a valid OpenGL context is
+ *              current on the active thread.
+ * @return false If width or height are invalid (<= 0), or if no OpenGL context is
+ *              current on the active thread.
  */
-bool init(Extent2D initial_extent);
+[[nodiscard]] bool init(Extent2D initial_extent);
+
+/**
+ * @brief Retrieves the default rendering extent configured during initialization.
+ * @pre glsa::init() must have been called successfully first.
+ * @return The cached Extent2D structure containing width and height bounds.
+ */
+Extent2D getDefaultExtent();
 
 } // namespace glsa
 
 // clang-format off
 #if defined(GLSA_IMPLEMENTATION) || defined(GLSA_CLANGD_IMPLEMENTATION)
 
-#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 namespace glsa {
-    // Implementation goes here
+
+/**
+ * @brief Internal global state holding the fallback or baseline resolution bounds.
+ */
+inline Extent2D g_default_extent{0, 0};
+
+[[nodiscard]] bool init(Extent2D initial_extent) {
+    if (initial_extent.width <= 0 || initial_extent.height <= 0) {
+        return false;
+    }
+
+    if (glfwGetCurrentContext() == nullptr) {
+        return false;
+    }
+
+    g_default_extent = initial_extent;
+    return true;
 }
+
+Extent2D getDefaultExtent() {
+    return g_default_extent;
+}
+
+} // namespace glsa
 
 #endif // GLSA_IMPLEMENTATION || GLSA_CLANGD_IMPLEMENTATION
 // clang-format on

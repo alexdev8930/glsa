@@ -13,13 +13,15 @@ Versioning uses [semver](https://semver.org).
 - Added a GLFW window example to test the OpenGL and CMake setup.
 - Started the API spec with the planned `glsa::init` requirements and return value.
 - Added ClangFormat and clangd config files, along with the MIT license and contribution guide.
-
-### Changed
+- Implemented `glsa::init(Extent2D initial_extent)` with dimension validation and OpenGL context check.
+- Added `glsa::getDefaultExtent()` accessor for retrieving the cached default render extent.
 - Configured clang-format to indent preprocessor directives with spaces.
-- CMake now runs clang-tidy when it is installed.
-- The example checks GLFW, window creation, and GLAD initialization before continuing.
-- The example requests a forward-compatible OpenGL 4.1 core context on macOS.
-- CMake presets locate vcpkg in the standard per-user directory without requiring a `VCPKG_ROOT` export.
-- The README now documents CMake preset commands for building and running the demo.
-- Clarified the header-only and dependency rules for contributions.
-- Updated ignore rules for local clangd and compile command files.
+- Added clang-tidy to CMake when it is installed.
+- Added GLFW, window creation, and GLAD initialization checks to the example.
+- Added forward-compatible OpenGL 4.1 core context request on macOS.
+- Added vcpkg preset configuration for CMake presets without requiring `VCPKG_ROOT`.
+- Added CMake preset documentation to the README.
+- Added header-only and dependency rules for contributions to CONTRIBUTING.md.
+- Added ignore rules for local clangd and compile command files.
+- Added `[[nodiscard]]` on `init` and documentation for `getDefaultExtent` to `docs/api_spec.md`.
+- Added `glsa::init({800, 600})` call to `examples/example.cpp`.
