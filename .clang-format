@@ -116,6 +116,6 @@ IncludeCategories:
 FixNamespaceComments: true
 ReflowComments: true
 KeepEmptyLinesAtTheStartOfBlocks: false
-MaxEmptyLinesToKeep: 1
+MaxEmptyLinesToKeep: 3
 ...
 

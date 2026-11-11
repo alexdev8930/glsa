@@ -3,9 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 Versioning uses [semver](https://semver.org).
 
-## Unreleased
+## v0.1.0 - 2026-11-11
 
 ### Added
+- Added a dedicated public `glsa/glsa_types.h` header file to cleanly house the `Extent2D`, `Program`, and `ShaderSource` structures.
 - Added the initial `glsa.h` header scaffold with C++17, platform, and OpenGL version checks, plus the documented `glsa::init` declaration.
 - Added a cross-platform CMake `run-examples` target for building and launching the demo.
 - Added GitHub Actions builds for Linux, Windows/MSVC and MacOS.
