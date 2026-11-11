@@ -127,50 +127,51 @@ std::string loadShaderSource(const char* filepath);
 
 } // namespace glsa
 
-
 // clang-format off
 #if defined(GLSA_IMPLEMENTATION) || defined(GLSA_CLANGD_IMPLEMENTATION)
 
 #include <GLFW/glfw3.h>
+#include "glsa/detail/glsa_internal.h"
+// clang-format on
 
 namespace glsa {
 
-
-inline Extent2D g_default_extent{0, 0};
-
-
 [[nodiscard]] bool init(Extent2D initial_extent) {
     if (initial_extent.width <= 0 || initial_extent.height <= 0) {
-        std::fprintf(stderr, "GLSA: Invalid initial extent (%d x %d). Width and height must be > 0.\n",
-                     initial_extent.width, initial_extent.height);
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Invalid initial extent (%d x %d). Width and height must be > 0.\n",
+            initial_extent.width, initial_extent.height);
         return false;
     }
 
     if (glfwGetCurrentContext() == nullptr) {
-        std::fprintf(stderr, "GLSA: No active OpenGL context found on the current thread.\n");
+        std::fprintf(stderr,
+                     "[GLSA ERROR] No active OpenGL context found on the current thread.\n");
         return false;
     }
 
-    g_default_extent = initial_extent;
+    glsa::internal::g_default_extent = initial_extent;
+    glsa::internal::g_is_initialized = true;
     return true;
 }
 
 
 
 Extent2D getDefaultExtent() {
-    return g_default_extent;
+    return glsa::internal::g_default_extent;
 }
 
 
-std::string loadShaderSource(const char *filepath) {
+std::string loadShaderSource(const char* filepath) {
     if (filepath == nullptr) {
-        std::fprintf(stderr, "GLSA: Shader filepath cannot be null.\n");
+        std::fprintf(stderr, "[GLSA ERROR] Shader filepath cannot be null.\n");
         return "";
     }
 
     std::ifstream file(filepath, std::ios::binary | std::ios::ate);
     if (!file.is_open()) {
-        std::fprintf(stderr, "GLSA: Failed to open shader file: %s\n", filepath);
+        std::fprintf(stderr, "[GLSA ERROR] Failed to open shader file: %s\n", filepath);
         return "";
     }
 
@@ -183,17 +184,111 @@ std::string loadShaderSource(const char *filepath) {
     file.seekg(0, std::ios::beg);
 
     if (!file.read(source.data(), size)) {
-        std::fprintf(stderr, "GLSA: Failed to read shader file: %s\n", filepath);
+        std::fprintf(stderr, "[GLSA ERROR] Failed to read shader file: %s\n", filepath);
         return "";
     }
 
     return source;
 }
 
+
+[[nodiscard]] Program createProgram(const ShaderSource& sources) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(stderr,
+                "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+                "function.\n");
+        return Program{0};
+    }
+
+    if (glfwGetCurrentContext() == nullptr) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] No active OpenGL context found on the current thread.\n");
+        return Program{0};
+    }
+
+    if (sources.vertex.empty() || sources.fragment.empty()) {
+        std::fprintf(stderr, "[GLSA ERROR] Vertex and fragment shader sources cannot be empty.\n");
+        return Program{0};
+    }
+
+    auto compileShader = [](GLenum type, std::string_view source) -> GLuint {
+        GLuint shader = glCreateShader(type);
+
+        if (shader == 0) {
+            std::fprintf(stderr, "[GLSA ERROR] Failed to allocate shader object\n");
+            return 0;
+        }
+
+        const char* src_ptr = source.data();
+        const auto src_len = static_cast<GLint>(source.size());
+
+        glShaderSource(shader, 1, &src_ptr, &src_len);
+        glCompileShader(shader);
+        GLint success = GL_FALSE;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+        if (success == GL_FALSE) {
+            GLint log_len = 0;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_len);
+            std::string log(static_cast<size_t>(log_len), '\0');
+            glGetShaderInfoLog(shader, log_len, nullptr, log.data());
+            const char* stage = (type == GL_VERTEX_SHADER) ? "Vertex" : "Fragment";
+            std::fprintf(stderr, "[GLSA ERROR] %s shader compilation failed:\n%s\n", stage,
+                         log.c_str());
+            glDeleteShader(shader);
+            return 0;
+        }
+
+        return shader;
+    };
+
+    GLuint vertex = compileShader(GL_VERTEX_SHADER, sources.vertex);
+
+    if (vertex == 0) {
+        return Program{0};
+    }
+
+    GLuint fragment = compileShader(GL_FRAGMENT_SHADER, sources.fragment);
+
+    if (fragment == 0) {
+        glDeleteShader(vertex);
+        return Program{0};
+    }
+
+    GLuint program = glCreateProgram();
+    if (program == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Failed to allocate shader program.\n");
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+        return Program{0};
+    }
+    glAttachShader(program, vertex);
+    glAttachShader(program, fragment);
+    glLinkProgram(program);
+    glDetachShader(program, vertex);
+    glDetachShader(program, fragment);
+    glDeleteShader(vertex);
+    glDeleteShader(fragment);
+    GLint success = GL_FALSE;
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+
+    if (success == GL_FALSE) {
+        GLint log_len = 0;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_len);
+        std::string log(static_cast<size_t>(log_len), '\0');
+        glGetProgramInfoLog(program, log_len, nullptr, log.data());
+        std::fprintf(stderr, "[GLSA ERROR] Shader program linking failed:\n%s\n", log.c_str());
+        glDeleteProgram(program);
+        return Program{0};
+    }
+
+    return Program{program};
+}
+
+
 } // namespace glsa
 
 #endif // GLSA_IMPLEMENTATION || GLSA_CLANGD_IMPLEMENTATION
-// clang-format on
 
 #undef GLSA_PLATFORM_WINDOWS
 #undef GLSA_PLATFORM_MACOS

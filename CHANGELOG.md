@@ -6,7 +6,11 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
-- Implement `glsa::loadShaderSource` function
+- Updated `examples/example.cpp` to compile and link inline GLSL shaders via `glsa::createProgram` and render a light blue square.
+- Implemented `glsa::createProgram(const ShaderSource& sources)` with vertex and fragment shader compilation, program linking, error logging, and GPU resource cleanup.
+- Implemented `glsa::loadShaderSource(const char* filepath)` to read GLSL shader source files from disk into a `std::string`.
+- Added internal initialization state tracking (`g_is_initialized`) in `glsa::internal` and `[GLSA ERROR]` logging across runtime validation checks.
+- Added `glsa/detail/glsa_internal.h` for internal runtime state and private helpers.
 
 ## v0.1.0 - 2026-11-11
 

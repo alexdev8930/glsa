@@ -7,4 +7,4 @@ Diagnostics:
 If:
   PathMatch: .*include/glsa/glsa\.h
 CompileFlags:
-  Add: [-DGLSA_CLANGD_IMPLEMENTATION]
+  Add: [-DGLSA_CLANGD_IMPLEMENTATION, -include, glad/gl.h]
