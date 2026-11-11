@@ -19,9 +19,9 @@ This repo is intentionally small. Most of the work lives in one header (maybe mo
 - `examples/` - Example programs demonstrating GLSA.
 - `docs/` - Documentation about GLSA
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules.   
-See [CHANGELOG.md](CHANGELOG.md) for official release history
-See [api_spec.md](docs/api_spec.md) for the API specification.    
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules.  
+See [CHANGELOG.md](CHANGELOG.md) for official release history.  
+See [api_spec.md](docs/api_spec.md) for the API specification.  
 
 > [!NOTE]
 > There are only a few functions in the GLSA API because its in its early stage
