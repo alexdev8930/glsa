@@ -32,13 +32,12 @@
  * - GLSA
  * - GLFW
  * - GLAD
- * - GLM
  *
  * @copyright Copyright (c) 2026 AlexDev
  * @license MIT
  */
 
-#include <glad/glad.h>
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 #define GLSA_IMPLEMENTATION
@@ -68,11 +67,12 @@ int main() {
 
     glfwMakeContextCurrent(window);
 
-    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
+    if (gladLoadGL(reinterpret_cast<GLADloadfunc>(glfwGetProcAddress)) == 0) {
         glfwDestroyWindow(window);
         glfwTerminate();
         return -1;
     }
+
 
     if (!glsa::init({800, 600})) {
         glfwDestroyWindow(window);

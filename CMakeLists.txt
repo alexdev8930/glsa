@@ -17,6 +17,5 @@ if(CLANG_TIDY_EXE)
     )
 endif()
 
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
-
+add_subdirectory(external/glad)
 add_subdirectory(examples)
