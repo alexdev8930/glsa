@@ -13,9 +13,9 @@ GLSA is a C++ rendering library built on OpenGL. It provides functions for drawi
 
 ## Project layout
 
-This repo is intentionally small. Most of the work lives in one header (maybe more later):
-
 - `include/glsa/glsa.h` - Main library header.
+- `include/glsa/glsa_types.h` - GLSA Data Types
+- `include/glsa/detail/glsa_internal.h` - Internal runtime state and private helpers.
 - `examples/` - Example programs demonstrating GLSA.
 - `docs/` - Documentation about GLSA
 
