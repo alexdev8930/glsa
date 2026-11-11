@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 Versioning uses [semver](https://semver.org).
 
+## Unreleased
+
+### Added
+- Implement `glsa::loadShaderSource` function
+
 ## v0.1.0 - 2026-11-11
 
 ### Added

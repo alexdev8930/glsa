@@ -25,6 +25,9 @@
 #ifndef GLSA_GLSA_H
 #define GLSA_GLSA_H
 
+#include <cstddef>
+#include <cstdio>
+#include <fstream>
 #include <string>
 #include "glsa/glsa_types.h"
 
@@ -132,16 +135,19 @@ std::string loadShaderSource(const char* filepath);
 
 namespace glsa {
 
-    
+
 inline Extent2D g_default_extent{0, 0};
 
 
 [[nodiscard]] bool init(Extent2D initial_extent) {
     if (initial_extent.width <= 0 || initial_extent.height <= 0) {
+        std::fprintf(stderr, "GLSA: Invalid initial extent (%d x %d). Width and height must be > 0.\n",
+                     initial_extent.width, initial_extent.height);
         return false;
     }
 
     if (glfwGetCurrentContext() == nullptr) {
+        std::fprintf(stderr, "GLSA: No active OpenGL context found on the current thread.\n");
         return false;
     }
 
@@ -150,10 +156,39 @@ inline Extent2D g_default_extent{0, 0};
 }
 
 
+
 Extent2D getDefaultExtent() {
     return g_default_extent;
 }
 
+
+std::string loadShaderSource(const char *filepath) {
+    if (filepath == nullptr) {
+        std::fprintf(stderr, "GLSA: Shader filepath cannot be null.\n");
+        return "";
+    }
+
+    std::ifstream file(filepath, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::fprintf(stderr, "GLSA: Failed to open shader file: %s\n", filepath);
+        return "";
+    }
+
+    std::streamsize size = file.tellg();
+    if (size <= 0) {
+        return "";
+    }
+
+    std::string source(static_cast<size_t>(size), '\0');
+    file.seekg(0, std::ios::beg);
+
+    if (!file.read(source.data(), size)) {
+        std::fprintf(stderr, "GLSA: Failed to read shader file: %s\n", filepath);
+        return "";
+    }
+
+    return source;
+}
 
 } // namespace glsa
 
