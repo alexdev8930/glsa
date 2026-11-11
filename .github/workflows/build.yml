@@ -22,7 +22,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            build-essential clang cmake ninja-build python3 git curl zip unzip tar \
+            build-essential clang cmake ninja-build git curl zip unzip tar \
             pkg-config autoconf autoconf-archive automake libtool \
             xorg-dev libxinerama-dev libxcursor-dev libglu1-mesa-dev \
             libwayland-dev libwayland-bin libxkbcommon-dev wayland-protocols extra-cmake-modules
@@ -45,11 +45,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
 
       - name: Set up vcpkg
         shell: pwsh
@@ -74,7 +69,7 @@ jobs:
       - name: Install build prerequisites
         run: |
           brew update
-          brew install cmake ninja python git curl zip unzip pkgconf autoconf autoconf-archive automake libtool
+          brew install cmake ninja git curl zip unzip pkgconf autoconf autoconf-archive automake libtool
 
       - name: Set up vcpkg
         run: |
