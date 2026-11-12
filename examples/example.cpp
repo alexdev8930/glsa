@@ -111,7 +111,7 @@ int main() {
         glClearColor(0.1F, 0.1F, 0.15F, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(program.id);
+        glsa::useProgram(program);
         glBindVertexArray(empty_vao);
         glPointSize(150.0F);
         glDrawArrays(GL_POINTS, 0, 1);

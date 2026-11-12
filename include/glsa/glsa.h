@@ -125,7 +125,23 @@ std::string loadShaderSource(const char* filepath);
 [[nodiscard]] Program createProgram(const ShaderSource& sources);
 
 
+/**
+ * @brief Bind a shader program for subsequent drawing.
+ *
+ * Makes the given program the active OpenGL shader program. All subsequent
+ * uniform updates and draw calls will use this program until another one is
+ * bound.
+ *
+ * @param program The program to bind. Must be a valid handle (non-zero id)
+ *                returned by glsa::createProgram().
+ *
+ * @pre glsa::init() must have been called successfully first.
+ * @pre program.id must be non-zero (a valid, linked program).
+ */
+void useProgram(const Program& program);
+
 } // namespace glsa
+
 
 // clang-format off
 #if defined(GLSA_IMPLEMENTATION) || defined(GLSA_CLANGD_IMPLEMENTATION)
@@ -194,9 +210,10 @@ std::string loadShaderSource(const char* filepath) {
 
 [[nodiscard]] Program createProgram(const ShaderSource& sources) {
     if (!glsa::internal::g_is_initialized) {
-        std::fprintf(stderr,
-                "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
-                "function.\n");
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+            "function.\n");
         return Program{0};
     }
 
@@ -283,6 +300,23 @@ std::string loadShaderSource(const char* filepath) {
     }
 
     return Program{program};
+}
+
+
+void useProgram(const Program& program) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] Library must be initialized via glsa::init() before calling "
+                     "this function.\n");
+        return;
+    }
+
+    if (program.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot use invalid program (id == 0).\n");
+        return;
+    }
+
+    glUseProgram(program.id);
 }
 
 

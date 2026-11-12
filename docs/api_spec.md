@@ -62,3 +62,10 @@ Compiles and links a vertex and fragment shader into a single OpenGL program. Re
 [[nodiscard]] Program createProgram(const ShaderSource& sources);
 ```
 
+### `glsa::useProgram`
+
+Makes the given program the active OpenGL shader program. 
+
+```cpp
+void useProgram(const Program& program);
+```
