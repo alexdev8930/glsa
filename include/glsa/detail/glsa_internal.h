@@ -1,6 +1,9 @@
 /**
  * @file glsa_internal.h
  * @brief Internal runtime state and private helpers for GLSA.
+ *
+ * @copyright Copyright (c) 2026 AlexDev
+ * @license MIT
  */
 
 #pragma once

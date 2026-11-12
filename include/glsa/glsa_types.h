@@ -1,3 +1,16 @@
+/**
+ * @file glsa_types.h
+ * @brief Core data structures and resource handles for GLSA.
+ *
+ * @details
+ * Defines lightweight value types, configuration extents, and opaque OpenGL
+ * resource handles used across the GLSA public API.
+ *
+ * @copyright Copyright (c) 2026 AlexDev
+ * @license MIT
+ */
+
+
 #ifndef GLSA_GLSA_TYPES_H
 #define GLSA_GLSA_TYPES_H
 
