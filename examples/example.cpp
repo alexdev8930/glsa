@@ -14,7 +14,8 @@
  * - Initializing GLAD.
  * - Initializing GLSA.
  * - Compiling and linking inline GLSL shaders via GLSA.
- * - Executing a basic OpenGL rendering loop to draw a light blue square.
+ * - Setting shader uniforms via glsa::setUniform.
+ * - Executing a basic OpenGL rendering loop to draw a colored point.
  * - Cleaning up OpenGL and application resources.
  *
  *
@@ -41,6 +42,7 @@
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #define GLSA_IMPLEMENTATION
 #include <glsa/glsa.h>
@@ -91,9 +93,10 @@ int main() {
 
     const char* fragment_shader_src = R"(
         #version 330 core
+        uniform vec4 uColor;
         out vec4 FragColor;
         void main() {
-            FragColor = vec4(0.4, 0.75, 1.0, 1.0);
+            FragColor = uColor;
         }
     )";
 
@@ -112,6 +115,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glsa::useProgram(program);
+        glsa::setUniform(program, "uColor", glm::vec4(0.4F, 0.75F, 1.0F, 1.0F));
         glBindVertexArray(empty_vao);
         glPointSize(150.0F);
         glDrawArrays(GL_POINTS, 0, 1);

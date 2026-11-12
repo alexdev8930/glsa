@@ -29,7 +29,8 @@
 #include <cstdio>
 #include <fstream>
 #include <string>
-#include "glsa/glsa_types.h"
+#include <glm/glm.hpp>
+#include "glsa_types.h"
 
 /* MSVC doesn't update __cplusplus by default, so we check _MSVC_LANG instead */
 #if defined(_MSVC_LANG)
@@ -154,6 +155,61 @@ void useProgram(const Program& program);
  */
 void deleteProgram(Program& program);
 
+
+/**
+ * @brief Set a uniform mat4 on the currently bound program.
+ *
+ * @param program The program whose uniform to set (must be bound via useProgram).
+ * @param name    Uniform variable name in the shader.
+ * @param value   Matrix value.
+ */
+void setUniform(const Program& program, const char* name, const glm::mat4& value);
+
+/**
+ * @brief Set a uniform vec4 on the currently bound program.
+ *
+ * @param program The program whose uniform to set (must be bound via useProgram).
+ * @param name    Uniform variable name in the shader.
+ * @param value   Vector value.
+ */
+void setUniform(const Program& program, const char* name, const glm::vec4& value);
+
+/**
+ * @brief Set a uniform vec3 on the currently bound program.
+ *
+ * @param program The program whose uniform to set (must be bound via useProgram).
+ * @param name    Uniform variable name in the shader.
+ * @param value   Vector value.
+ */
+void setUniform(const Program& program, const char* name, const glm::vec3& value);
+
+/**
+ * @brief Set a uniform vec2 on the currently bound program.
+ *
+ * @param program The program whose uniform to set (must be bound via useProgram).
+ * @param name    Uniform variable name in the shader.
+ * @param value   Vector value.
+ */
+void setUniform(const Program& program, const char* name, const glm::vec2& value);
+
+/**
+ * @brief Set a uniform float on the currently bound program.
+ *
+ * @param program The program whose uniform to set (must be bound via useProgram).
+ * @param name    Uniform variable name in the shader.
+ * @param value   Scalar value.
+ */
+void setUniform(const Program& program, const char* name, float value);
+
+/**
+ * @brief Set a uniform int on the currently bound program.
+ *
+ * @param program The program whose uniform to set (must be bound via useProgram).
+ * @param name    Uniform variable name in the shader.
+ * @param value   Scalar value.
+ */
+void setUniform(const Program& program, const char* name, int value);
+
 } // namespace glsa
 
 
@@ -162,6 +218,7 @@ void deleteProgram(Program& program);
 
 #include <GLFW/glfw3.h>
 #include "glsa/detail/glsa_internal.h"
+#include <glm/gtc/type_ptr.hpp>
 // clang-format on
 
 namespace glsa {
@@ -348,6 +405,79 @@ void deleteProgram(Program& program) {
 
     glDeleteProgram(program.id);
     program.id = 0;
+}
+
+
+void setUniform(const Program& program, const char* name, const glm::mat4& value) {
+    if (program.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
+        return;
+    }
+    GLint location = glGetUniformLocation(program.id, name);
+    if (location == -1) {
+        return;
+    }
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void setUniform(const Program& program, const char* name, const glm::vec4& value) {
+    if (program.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
+        return;
+    }
+    GLint location = glGetUniformLocation(program.id, name);
+    if (location == -1) {
+        return;
+    }
+    glUniform4fv(location, 1, glm::value_ptr(value));
+}
+
+void setUniform(const Program& program, const char* name, const glm::vec3& value) {
+    if (program.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
+        return;
+    }
+    GLint location = glGetUniformLocation(program.id, name);
+    if (location == -1) {
+        return;
+    }
+    glUniform3fv(location, 1, glm::value_ptr(value));
+}
+
+void setUniform(const Program& program, const char* name, const glm::vec2& value) {
+    if (program.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
+        return;
+    }
+    GLint location = glGetUniformLocation(program.id, name);
+    if (location == -1) {
+        return;
+    }
+    glUniform2fv(location, 1, glm::value_ptr(value));
+}
+ 
+void setUniform(const Program& program, const char* name, float value) {
+    if (program.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
+        return;
+    }
+    GLint location = glGetUniformLocation(program.id, name);
+    if (location == -1) {
+        return;
+    }
+    glUniform1f(location, value);
+}
+ 
+void setUniform(const Program& program, const char* name, int value) {
+    if (program.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
+        return;
+    }
+    GLint location = glGetUniformLocation(program.id, name);
+    if (location == -1) {
+        return;
+    }
+    glUniform1i(location, value);
 }
 
 } // namespace glsa

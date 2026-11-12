@@ -77,3 +77,43 @@ Delete a shader program and release its OpenGL resources.
 ```cpp
 void deleteProgram(Program& program);
 ```
+
+#### `glsa::setUniform(program, name, vec4)`
+
+Sets a 4-component vector uniform. Commonly used for RGBA colors or positions with a `w` component.
+
+```cpp
+void setUniform(const Program& program, const char* name, const glm::vec4& value);
+```
+
+### `glsa::setUniform(program, name, vec3)`
+
+Sets a 3-component vector uniform. Commonly used for 3D positions, directions, or RGB colors.
+
+```cpp
+void setUniform(const Program& program, const char* name, const glm::vec3& value);
+```
+
+### `glsa::setUniform(program, name, vec2)`
+
+Sets a 2-component vector uniform. Commonly used for 2D positions, offsets, or UV coordinates.
+
+```cpp
+void setUniform(const Program& program, const char* name, const glm::vec2& value);
+```
+
+### `glsa::setUniform(program, name, float)`
+
+Sets a single-precision scalar uniform.
+
+```cpp
+void setUniform(const Program& program, const char* name, float value);
+```
+
+### `glsa::setUniform(program, name, int)`
+
+Sets a signed integer uniform. Commonly used for texture unit indices or shader flags.
+
+```cpp
+void setUniform(const Program& program, const char* name, int value);
+```

@@ -6,6 +6,7 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
+- Implemented `glsa::setUniform` overloads for `mat4`, `vec4`, `vec3`, `vec2`, `float`, and `int`.
 - Implemented `glsa::deleteProgram(Program& program)` to delete a program
 - Implemented `glsa::useProgram(const Program& program)` to bind a shader program for drawing.
 - Updated `examples/example.cpp` to compile and link inline GLSL shaders via `glsa::createProgram` and render a light blue square.
