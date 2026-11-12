@@ -120,7 +120,7 @@ int main() {
         glfwPollEvents();
     }
     glDeleteVertexArrays(1, &empty_vao);
-    glDeleteProgram(program.id);
+    glsa::deleteProgram(program);
 
     glfwDestroyWindow(window);
     glfwTerminate();

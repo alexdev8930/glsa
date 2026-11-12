@@ -6,7 +6,8 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
-- Implemented `glsa::useProgram(const Program&)` to bind a shader program for drawing.
+- Implemented `glsa::deleteProgram(Program& program)` to delete a program
+- Implemented `glsa::useProgram(const Program& program)` to bind a shader program for drawing.
 - Updated `examples/example.cpp` to compile and link inline GLSL shaders via `glsa::createProgram` and render a light blue square.
 - Implemented `glsa::createProgram(const ShaderSource& sources)` with vertex and fragment shader compilation, program linking, error logging, and GPU resource cleanup.
 - Implemented `glsa::loadShaderSource(const char* filepath)` to read GLSL shader source files from disk into a `std::string`.

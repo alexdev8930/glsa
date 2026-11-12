@@ -69,3 +69,11 @@ Makes the given program the active OpenGL shader program.
 ```cpp
 void useProgram(const Program& program);
 ```
+
+### `glsa::deleteProgram` 
+
+Delete a shader program and release its OpenGL resources.
+
+```cpp
+void deleteProgram(Program& program);
+```

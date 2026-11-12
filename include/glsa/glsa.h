@@ -140,6 +140,20 @@ std::string loadShaderSource(const char* filepath);
  */
 void useProgram(const Program& program);
 
+
+/**
+ * @brief Delete a shader program and release its OpenGL resources.
+ *
+ * After this call the handle's id is reset to zero, making it safe to
+ * call again on the same handle.
+ *
+ * @param program The program to destroy. Its id is set to 0 after deletion.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ * @post program.id == 0
+ */
+void deleteProgram(Program& program);
+
 } // namespace glsa
 
 
@@ -319,6 +333,22 @@ void useProgram(const Program& program) {
     glUseProgram(program.id);
 }
 
+
+void deleteProgram(Program& program) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] Library must be initialized via glsa::init() before calling "
+                     "this function.\n");
+        return;
+    }
+
+    if (program.id == 0) {
+        return;
+    }
+
+    glDeleteProgram(program.id);
+    program.id = 0;
+}
 
 } // namespace glsa
 
