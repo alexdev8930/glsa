@@ -26,6 +26,16 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules.
 See [CHANGELOG.md](CHANGELOG.md) for official release history.  
 See [api_spec.md](docs/api_spec.md) for the API specification.  
 
+## Whats next
+
+- [ ] Upload vertex data to the GPU (`Buffer`, `setBufferData`)
+- [ ] Link buffers to VAO attribute locations (`setVertexAttribPointer`)
+- [ ] Built-in shader presets: `shaderPreset(type, name, version)` — e.g. `shaderPreset(vert, "basic", 330)`
+- [ ] Indexed drawing (`drawElements`)
+- [ ] Texture loading and binding
+- [ ] Shader hot-reload at runtime
+- [ ] Common shape helpers (`drawRectangle`, `drawCircle`)
+
 ## Dependency Management
 
 GLFW and GLM are installed by CMake from `vcpkg.json` in manifest mode (pinned versions). The GLAD loader is pre-generated and checked into `external/glad/` — no Python needed to build. You need CMake 3.21+, Git, vcpkg, and a C++17 compiler. An OpenGL-capable graphics driver is required at runtime.
