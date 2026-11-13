@@ -42,7 +42,6 @@
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 #define GLSA_IMPLEMENTATION
 #include <glsa/glsa.h>
@@ -108,22 +107,20 @@ int main() {
         return -1;
     }
 
-    GLuint empty_vao = 0;
-    glGenVertexArrays(1, &empty_vao);
-
+    glsa::VertexArray vao = glsa::createVertexArray();
     while (glfwWindowShouldClose(window) == 0) {
         glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glsa::useProgram(program);
         glsa::setUniform(program, "uColor", glsa::colors::PMS_542);
-        glBindVertexArray(empty_vao);
+        glsa::bindVertexArray(vao);
         glPointSize(150.0f);
-        glDrawArrays(GL_POINTS, 0, 1);
+        glsa::drawArrays(GL_POINTS, 0, 1);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glDeleteVertexArrays(1, &empty_vao);
+    glsa::deleteVertexArray(vao);
     glsa::deleteProgram(program);
 
     glfwDestroyWindow(window);

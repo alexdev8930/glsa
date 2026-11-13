@@ -28,6 +28,16 @@ struct ShaderSource {
 };
 ```
 
+### `glsa::VertexArray`
+
+Opaque handle to a vertex array object. The id is zero when the handle is invalid.
+
+```cpp
+struct VertexArray {
+    unsigned int id = 0;
+};
+```
+
 ## Core API
 
 ### `glsa::init`
@@ -118,22 +128,34 @@ Sets a signed integer uniform. Commonly used for texture unit indices or shader 
 void setUniform(const Program& program, const char* name, int value);
 ```
 
-### Predefined Color Constants
+### `glsa::createVertexArray`
 
-All generated constants are normalized RGBA `glm::vec4` values in `[0.0, 1.0]` with an alpha of `1.0f`, including standard web, Pantone (`PAN_*`), and retro hardware palettes (`NES_*`, `MSX_*`, `CGA_*`, `ZXSPEC_*`, `MAC2_*`, `SG1000_*`).
-
-```cpp
-#include <glsa/glsa_colors.h>
-
-glsa::setUniform(program, "u_color", glsa::colors::PMS_542);
-```
-
-### `glsa::overrideAlpha`
-
-Returns a copy of a color with its alpha channel replaced at compile time.
+Creates a vertex array object. Returns `VertexArray{0}` if initialization has not been called.
 
 ```cpp
-[[nodiscard]] constexpr glm::vec4 overrideAlpha(const glm::vec4& color, float alpha) noexcept;
+[[nodiscard]] VertexArray createVertexArray();
 ```
 
-(`GL_BLEND` must be enabled before you call the function)
+### `glsa::bindVertexArray`
+
+Binds a vertex array object for subsequent drawing.
+
+```cpp
+void bindVertexArray(const VertexArray& vao);
+```
+
+### `glsa::deleteVertexArray`
+
+Deletes a vertex array object and releases its OpenGL resources. Resets `id` to `0`.
+
+```cpp
+void deleteVertexArray(VertexArray& vao);
+```
+
+### `glsa::drawArrays`
+
+Draws primitives from array data. Wraps `glDrawArrays`.
+
+```cpp
+void drawArrays(GLenum mode, GLint first, GLsizei count);
+```

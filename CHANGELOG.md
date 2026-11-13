@@ -6,6 +6,9 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
+- Implemented `glsa::drawArrays(GLenum, GLint, GLsizei)` to wrap `glDrawArrays`.
+- Added `glsa::VertexArray` opaque handle type in `glsa::glsa_types.h`.
+- Implemented `glsa::createVertexArray()`, `glsa::bindVertexArray()`, and `glsa::deleteVertexArray()` for vertex array object management.
 - Added a standalone header providing predefined `inline constexpr glm::vec4` RGBA color constants under `namespace glsa::colors` 
 - Added a `glsa::overrideAlpha(const glm::vec4& color, float alpha) helper in `glsa_colors.h` to replace the alpha channel of any `glm::vec4` color.
 - Added `tools/color_gen/json_to_header.py`, `tools/color_gen/lots_of_colors.json` to generate `glsa_colors.h` automatically.

@@ -10,7 +10,6 @@
  * @license MIT
  */
 
-
 #ifndef GLSA_GLSA_TYPES_H
 #define GLSA_GLSA_TYPES_H
 
@@ -44,6 +43,15 @@ struct Program {
 struct ShaderSource {
     std::string_view vertex;   /**< GLSL vertex shader source code text. */
     std::string_view fragment; /**< GLSL fragment shader source code text. */
+};
+
+/**
+ * @brief Opaque handle to a vertex array object.
+ *
+ * The id is zero when the handle is invalid.
+ */
+struct VertexArray {
+    unsigned int id = 0;
 };
 
 } // namespace glsa

@@ -210,6 +210,49 @@ void setUniform(const Program& program, const char* name, float value);
  */
 void setUniform(const Program& program, const char* name, int value);
 
+
+/**
+ * @brief Create a vertex array object.
+ *
+ * @return A VertexArray handle. id is 0 if creation failed.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+[[nodiscard]] VertexArray createVertexArray();
+
+/**
+ * @brief Bind a vertex array object for subsequent drawing.
+ *
+ * @param vao The vertex array object to bind. Must be a valid handle (non-zero id).
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void bindVertexArray(const VertexArray& vao);
+
+/**
+ * @brief Delete a vertex array object and release its OpenGL resources.
+ *
+ * After this call the handle's id is reset to zero.
+ *
+ * @param vao The vertex array object to destroy. Its id is set to 0 after deletion.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ * @post vao.id == 0
+ */
+void deleteVertexArray(VertexArray& vao);
+
+
+/**
+ * @brief Draw primitives from array data.
+ *
+ * @param mode  Primitive type (e.g. GL_POINTS, GL_TRIANGLES).
+ * @param first Starting index in the enabled arrays.
+ * @param count Number of indices to be rendered.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void drawArrays(GLenum mode, GLint first, GLsizei count);
+
 } // namespace glsa
 
 
@@ -455,7 +498,7 @@ void setUniform(const Program& program, const char* name, const glm::vec2& value
     }
     glUniform2fv(location, 1, glm::value_ptr(value));
 }
- 
+
 void setUniform(const Program& program, const char* name, float value) {
     if (program.id == 0) {
         std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
@@ -467,7 +510,7 @@ void setUniform(const Program& program, const char* name, float value) {
     }
     glUniform1f(location, value);
 }
- 
+
 void setUniform(const Program& program, const char* name, int value) {
     if (program.id == 0) {
         std::fprintf(stderr, "[GLSA ERROR] Cannot set uniform on invalid program (id == 0).\n");
@@ -478,6 +521,64 @@ void setUniform(const Program& program, const char* name, int value) {
         return;
     }
     glUniform1i(location, value);
+}
+
+
+[[nodiscard]] VertexArray createVertexArray() {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] Library must be initialized via glsa::init() before calling "
+                     "this function.\n");
+        return VertexArray{0};
+    }
+
+    VertexArray vao;
+    glGenVertexArrays(1, &vao.id);
+    return vao;
+}
+
+void bindVertexArray(const VertexArray& vao) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] Library must be initialized via glsa::init() before calling "
+                     "this function.\n");
+        return;
+    }
+
+    if (vao.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot bind invalid vertex array (id == 0).\n");
+        return;
+    }
+
+    glBindVertexArray(vao.id);
+}
+
+void deleteVertexArray(VertexArray& vao) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] Library must be initialized via glsa::init() before calling "
+                     "this function.\n");
+        return;
+    }
+
+    if (vao.id == 0) {
+        return;
+    }
+
+    glDeleteVertexArrays(1, &vao.id);
+    vao.id = 0;
+}
+
+
+void drawArrays(GLenum mode, GLint first, GLsizei count) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] Library must be initialized via glsa::init() before calling "
+                     "this function.\n");
+        return;
+    }
+
+    glDrawArrays(mode, first, count);
 }
 
 } // namespace glsa
