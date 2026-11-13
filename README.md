@@ -15,16 +15,16 @@ GLSA is a C++ rendering library built on OpenGL. It provides functions for drawi
 
 - `include/glsa/glsa.h` - Main library header.
 - `include/glsa/glsa_types.h` - GLSA Data Types
+- `include/glsa/glsa_colors.h` - Predefined RGBA color constants (`glm::vec4`). 
 - `include/glsa/detail/glsa_internal.h` - Internal runtime state and private helpers.
 - `examples/` - Example programs demonstrating GLSA.
 - `docs/` - Documentation about GLSA
+- `tools` - Code generation scripts and maintainer utilities.
+- `external` - Third-party dependencies (e.g., GLAD).
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules.  
 See [CHANGELOG.md](CHANGELOG.md) for official release history.  
 See [api_spec.md](docs/api_spec.md) for the API specification.  
-
-> [!NOTE]
-> There are only a few functions in the GLSA API because its in its early stage
 
 ## Dependency Management
 

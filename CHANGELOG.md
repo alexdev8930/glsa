@@ -6,6 +6,9 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
+- Added a standalone header providing predefined `inline constexpr glm::vec4` RGBA color constants under `namespace glsa::colors` 
+- Added a `glsa::overrideAlpha(const glm::vec4& color, float alpha) helper in `glsa_colors.h` to replace the alpha channel of any `glm::vec4` color.
+- Added `tools/color_gen/json_to_header.py`, `tools/color_gen/lots_of_colors.json` to generate `glsa_colors.h` automatically.
 - Implemented `glsa::setUniform` overloads for `mat4`, `vec4`, `vec3`, `vec2`, `float`, and `int`.
 - Implemented `glsa::deleteProgram(Program& program)` to delete a program
 - Implemented `glsa::useProgram(const Program& program)` to bind a shader program for drawing.
@@ -14,6 +17,9 @@ Versioning uses [semver](https://semver.org).
 - Implemented `glsa::loadShaderSource(const char* filepath)` to read GLSL shader source files from disk into a `std::string`.
 - Added internal initialization state tracking (`g_is_initialized`) in `glsa::internal` and `[GLSA ERROR]` logging across runtime validation checks.
 - Added `glsa/detail/glsa_internal.h` for internal runtime state and private helpers.
+
+### Changed
+- Disabled `readability-uppercase-literal-suffix` to allow lowercase `f` float literals
 
 ## v0.1.0 - 2026-11-11
 

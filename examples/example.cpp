@@ -46,6 +46,7 @@
 
 #define GLSA_IMPLEMENTATION
 #include <glsa/glsa.h>
+#include <glsa/glsa_colors.h>
 
 int main() {
     if (glfwInit() == GLFW_FALSE) {
@@ -111,13 +112,12 @@ int main() {
     glGenVertexArrays(1, &empty_vao);
 
     while (glfwWindowShouldClose(window) == 0) {
-        glClearColor(0.1F, 0.1F, 0.15F, 1.0F);
+        glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
         glsa::useProgram(program);
-        glsa::setUniform(program, "uColor", glm::vec4(0.4F, 0.75F, 1.0F, 1.0F));
+        glsa::setUniform(program, "uColor", glsa::colors::PMS_542);
         glBindVertexArray(empty_vao);
-        glPointSize(150.0F);
+        glPointSize(150.0f);
         glDrawArrays(GL_POINTS, 0, 1);
 
         glfwSwapBuffers(window);
