@@ -30,7 +30,7 @@ See [api_spec.md](docs/api_spec.md) for the API specification.
 
 - [ ] Upload vertex data to the GPU (`Buffer`, `setBufferData`)
 - [ ] Link buffers to VAO attribute locations (`setVertexAttribPointer`)
-- [ ] Built-in shader presets: `shaderPreset(type, name, version)` — e.g. `shaderPreset(vert, "basic", 330)`
+- [ ] Built-in shader presets: `shaderPreset(name, version)`, example: `shaderPreset("basic", 330)`
 - [ ] Indexed drawing (`drawElements`)
 - [ ] Texture loading and binding
 - [ ] Shader hot-reload at runtime
