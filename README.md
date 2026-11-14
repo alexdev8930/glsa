@@ -113,10 +113,11 @@ git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
 
 ### Build
 
-CMake installs the pinned dependencies automatically, then builds and runs the examples:
+A Makefile wrapper runs the CMake commands for you so you don't have to type them out manually. CMake installs the pinned dependencies automatically, then builds and runs the examples:
 
 ```bash
-cmake --preset linux
-cmake --build --preset linux --target run-examples
+make linux
+make run # Auto-detects your OS, (optional: PLATFORM=linux|windows-msvc|macos)
 ```
-Use `windows-msvc` on Windows or `macos` on MacOS in place of `linux`.
+
+Use `windows-msvc` on Windows or `macos` on macOS in place of `linux` (or just run `make` to build for your current OS automatically).

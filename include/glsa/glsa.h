@@ -342,7 +342,7 @@ std::string loadShaderSource(const char* filepath) {
         return Program{0};
     }
 
-    auto compileShader = [](GLenum type, std::string_view source) -> GLuint {
+    auto compile_shader = [](GLenum type, std::string_view source) -> GLuint {
         GLuint shader = glCreateShader(type);
 
         if (shader == 0) {
@@ -373,13 +373,13 @@ std::string loadShaderSource(const char* filepath) {
         return shader;
     };
 
-    GLuint vertex = compileShader(GL_VERTEX_SHADER, sources.vertex);
+    GLuint vertex = compile_shader(GL_VERTEX_SHADER, sources.vertex);
 
     if (vertex == 0) {
         return Program{0};
     }
 
-    GLuint fragment = compileShader(GL_FRAGMENT_SHADER, sources.fragment);
+    GLuint fragment = compile_shader(GL_FRAGMENT_SHADER, sources.fragment);
 
     if (fragment == 0) {
         glDeleteShader(vertex);

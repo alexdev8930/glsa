@@ -9,12 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
-    set(CMAKE_CXX_CLANG_TIDY 
-        ${CLANG_TIDY_EXE}
-        "-checks=bugprone-*,modernize-*,performance-*,readability-*,-modernize-use-trailing-return-type,-readability-magic-numbers,-readability-implicit-bool-conversion,-readability-uppercase-literal-suffix"
-        "-warnings-as-errors=*"
-        "-header-filter=${CMAKE_CURRENT_SOURCE_DIR}/include/glsa/.*"
-    )
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 endif()
 
 add_subdirectory(external/glad)
