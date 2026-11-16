@@ -259,7 +259,6 @@ void drawArrays(GLenum mode, GLint first, GLsizei count);
 // clang-format off
 #if defined(GLSA_IMPLEMENTATION) || defined(GLSA_CLANGD_IMPLEMENTATION)
 
-#include <GLFW/glfw3.h>
 #include "glsa/detail/glsa_internal.h"
 #include <glm/gtc/type_ptr.hpp>
 // clang-format on
@@ -275,7 +274,7 @@ namespace glsa {
         return false;
     }
 
-    if (glfwGetCurrentContext() == nullptr) {
+    if (glGetString == nullptr || glGetString(GL_VERSION) == nullptr) {
         std::fprintf(stderr,
                      "[GLSA ERROR] No active OpenGL context found on the current thread.\n");
         return false;
@@ -328,12 +327,6 @@ std::string loadShaderSource(const char* filepath) {
             stderr,
             "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
             "function.\n");
-        return Program{0};
-    }
-
-    if (glfwGetCurrentContext() == nullptr) {
-        std::fprintf(stderr,
-                     "[GLSA ERROR] No active OpenGL context found on the current thread.\n");
         return Program{0};
     }
 
@@ -558,10 +551,6 @@ void deleteVertexArray(VertexArray& vao) {
         std::fprintf(stderr,
                      "[GLSA ERROR] Library must be initialized via glsa::init() before calling "
                      "this function.\n");
-        return;
-    }
-
-    if (vao.id == 0) {
         return;
     }
 

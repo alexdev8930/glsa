@@ -2,15 +2,22 @@
   "name": "glsa",
   "builtin-baseline": "ec48c11eae9448c8c6e7739d93e06fa2433aa95f",
   "dependencies": [
-    {
-      "name": "glfw3",
-      "features": ["wayland"],
-      "platform": "linux"
-    },
-    {
-      "name": "glfw3",
-      "platform": "!linux"
-    },
     "glm"
-  ]
+  ],
+  "features": {
+    "examples": {
+      "description": "Build example applications using GLFW",
+      "dependencies": [
+        {
+          "name": "glfw3",
+          "features": ["wayland"],
+          "platform": "linux"
+        },
+        {
+          "name": "glfw3",
+          "platform": "!linux"
+        }
+      ]
+    }
+  }
 }
