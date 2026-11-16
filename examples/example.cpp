@@ -14,7 +14,7 @@
  * - Initializing GLAD.
  * - Initializing GLSA.
  * - Querying the active render aspect ratio via glsa::getAspectRatio.
- * - Compiling and linking inline GLSL shaders via GLSA.
+ * - Loading a built-in GLSL shader preset via glsa::shaderPreset.
  * - Uploading vertex data to a GPU buffer via glsa::Buffer and glsa::setBufferData.
  * - Configuring vertex attribute layouts via glsa::setVertexAttribPointer.
  * - Setting shader uniforms via glsa::setUniform.
@@ -84,29 +84,11 @@ int main() {
         return -1;
     }
 
-
     if (!glsa::init({800, 600})) {
         glfwDestroyWindow(window);
         glfwTerminate();
         return -1;
     }
-
-    const char* vertex_shader_src = R"(
-        #version 330 core
-        layout (location = 0) in vec3 aPos;
-        void main() {
-            gl_Position = vec4(aPos, 1.0);
-        }
-    )";
-
-    const char* fragment_shader_src = R"(
-        #version 330 core
-        uniform vec4 uColor;
-        out vec4 FragColor;
-        void main() {
-            FragColor = uColor;
-        }
-    )";
 
     const float aspect = glsa::getAspectRatio();
 
@@ -115,7 +97,7 @@ int main() {
         glm::vec3(0.5f / aspect, -0.433f, 0.0f),
         glm::vec3(0.0f, 0.433f, 0.0f),
     };
-    
+
     glsa::VertexArray vao = glsa::createVertexArray();
     glsa::bindVertexArray(vao);
 
@@ -123,7 +105,7 @@ int main() {
     glsa::setBufferData(vbo, triangle);
     glsa::setVertexAttribPointer(0, {3, sizeof(glm::vec3), 0});
 
-    glsa::Program program = glsa::createProgram({vertex_shader_src, fragment_shader_src});
+    glsa::Program program = glsa::shaderPreset("basic", 330);
     if (program.id == 0) {
         glsa::deleteBuffer(vbo);
         glsa::deleteVertexArray(vao);

@@ -350,6 +350,25 @@ void deleteBuffer(Buffer& buffer);
  */
 void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
 
+
+/**
+ * @brief Compile and link one of the built-in GLSL shader presets.
+ *
+ * Supported preset names:
+ * - "basic": Solid flat color (aPos at location 0, uniform vec4 uColor).
+ * - "vertex_color": Per-vertex RGB color (aPos at location 0, aColor at location 1).
+ * - "gradient": Vertical two-color blend (aPos at location 0, uniform vec4 uColorBottom, uColorTop).
+ * - "pulse": Animated brightness pulse (aPos at location 0, uniform vec4 uColor, float uTime).
+ *
+ * @param name    Name of the built-in preset to compile.
+ * @param version GLSL version directive to inject (defaults to 330).
+ *
+ * @return A Program handle. id is 0 if the preset name is unknown or compilation failed.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+[[nodiscard]] Program shaderPreset(std::string_view name, int version = 330);
+
 } // namespace glsa
 
 
@@ -772,6 +791,71 @@ void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute) {
                           attribute.normalized ? GL_TRUE : GL_FALSE, attribute.stride,
                           reinterpret_cast<const void*>(attribute.offset)); 
     glEnableVertexAttribArray(index);
+}
+
+
+Program shaderPreset(std::string_view name, int version) {
+    std::string header = "#version " + std::to_string(version) + " core\n";
+
+    if (name == "basic") {
+        std::string vert = header + R"(
+            layout (location = 0) in vec3 aPos;
+            void main() {
+                gl_Position = vec4(aPos, 1.0);
+            }
+        )";
+        std::string frag = header + R"(
+            out vec4 FragColor;
+            uniform vec4 uColor;
+            void main() {
+                FragColor = uColor;
+            }
+        )";
+        return createProgram({vert, frag});
+    }
+
+    if (name == "vertex_color") {
+        std::string vert = header + R"(
+            layout (location = 0) in vec3 aPos;
+            layout (location = 1) in vec3 aColor;
+            out vec3 vColor;
+            void main() {
+                vColor = aColor;
+                gl_Position = vec4(aPos, 1.0);
+            }
+        )";
+        std::string frag = header + R"(
+            in vec3 vColor;
+            out vec4 FragColor;
+            void main() {
+                FragColor = vec4(vColor, 1.0);
+            }
+        )";
+        return createProgram({vert, frag});
+    }
+
+    if (name == "gradient") {
+        std::string vert = header + R"(
+            layout (location = 0) in vec3 aPos;
+            out float vFactor;
+            void main() {
+                vFactor = clamp(aPos.y * 0.5 + 0.5, 0.0, 1.0);
+                gl_Position = vec4(aPos, 1.0);
+            }
+        )";
+        std::string frag = header + R"(
+            in float vFactor;
+            out vec4 FragColor;
+            uniform vec4 uColorBottom;
+            uniform vec4 uColorTop;
+            void main() {
+                FragColor = mix(uColorBottom, uColorTop, vFactor);
+            }
+        )";
+        return createProgram({vert, frag});
+    }
+
+    return Program{0};
 }
 
 } // namespace glsa

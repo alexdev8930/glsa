@@ -28,7 +28,6 @@ See [api_spec.md](docs/api_spec.md) for the API specification.
 
 ## Whats next
 
-- [ ] Built-in shader presets: `shaderPreset(name, version)`, example: `shaderPreset("basic", 330)`
 - [ ] Indexed drawing (`drawElements`)
 - [ ] Texture loading and binding
 - [ ] Shader hot-reload at runtime

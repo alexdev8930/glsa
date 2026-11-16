@@ -241,3 +241,11 @@ Configures and enables a vertex attribute pointer on the currently bound vertex 
 ```cpp
 void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
 ```
+
+### `glsa::shaderPreset`
+
+Compiles and links one of the built-in GLSL shader presets (`"basic"`, `"vertex_color"`, `"gradient"`, or `"pulse"`) using the specified GLSL version (defaults to `330`). Returns a `Program` handle. The id is zero if the preset name is unknown or compilation failed.
+
+```cpp
+[[nodiscard]] Program shaderPreset(std::string_view name, int version = 330);
+```
