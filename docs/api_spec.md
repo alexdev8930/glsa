@@ -38,11 +38,22 @@ struct VertexArray {
 };
 ```
 
+### `glsa::Buffer`
+
+Opaque handle to a GPU buffer object (e.g. `GL_ARRAY_BUFFER`, `GL_ELEMENT_ARRAY_BUFFER`). The id is zero when the handle is invalid.
+
+```cpp
+struct Buffer {
+    unsigned int id = 0;
+    unsigned int target = 0;
+};
+```
+
 ## Core API
 
 ### `glsa::init`
 
-Initializes the GLSA runtime context for the given render size. Before calling it, initialize a valid GLFW window and OpenGL context, load OpenGL function pointers (e.g. via GLAD), and make that context current on the active thread. Returns `true` if the context is valid and dimensions are acceptable. Returns `false` if dimensions are invalid or no OpenGL context is current.
+Initializes the GLSA runtime context for the given render size. Before calling it, create an active OpenGL context (via GLFW, SDL2/SDL3, Win32, EGL, etc.), load OpenGL function pointers (e.g. via GLAD), and make that context current on the active thread. Returns `true` if the context is valid and dimensions are acceptable. Returns `false` if dimensions are invalid or no OpenGL context is current.
 
 ```cpp
 [[nodiscard]] bool init(Extent2D initial_extent);
@@ -158,4 +169,45 @@ Draws primitives from array data. Wraps `glDrawArrays`.
 
 ```cpp
 void drawArrays(GLenum mode, GLint first, GLsizei count);
+```
+
+### `glsa::createBuffer`
+
+Creates a GPU buffer object for the specified binding target (defaults to `GL_ARRAY_BUFFER`). Returns `Buffer{0, target}` if initialization has not been called.
+
+```cpp
+[[nodiscard]] Buffer createBuffer(GLenum target = GL_ARRAY_BUFFER);
+```
+
+### `glsa::bindBuffer`
+
+Binds a buffer object to its stored binding target.
+
+```cpp
+void bindBuffer(const Buffer& buffer);
+```
+
+### `glsa::setBufferData`
+
+Binds the buffer and uploads data from CPU memory to the GPU. Includes typed overloads for `std::vector` and `std::array` so byte size does not need to be calculated manually.
+
+```cpp
+void setBufferData(const Buffer& buffer, const void* data, GLsizeiptr size,
+                   GLenum usage = GL_STATIC_DRAW);
+
+template <typename T>
+void setBufferData(const Buffer& buffer, const std::vector<T>& data,
+                   GLenum usage = GL_STATIC_DRAW);
+
+template <typename T, size_t N>
+void setBufferData(const Buffer& buffer, const std::array<T, N>& data,
+                   GLenum usage = GL_STATIC_DRAW);
+```
+
+### `glsa::deleteBuffer`
+
+Deletes a buffer object and releases its OpenGL resources. Resets `id` to `0`.
+
+```cpp
+void deleteBuffer(Buffer& buffer);
 ```

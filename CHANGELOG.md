@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 Versioning uses [semver](https://semver.org).
 
+## Unreleased 
+
+### Added
+- `glsa::Buffer` handle type for GPU vertex and index buffer objects
+- `glsa::createBuffer`, `glsa::bindBuffer`, `glsa::setBufferData` (raw pointer, `std::vector`, and `std::array` overloads), and `glsa::deleteBuffer`
+
+### Changed
+- Replaced `glfwGetCurrentContext()` in `glsa::init()` with a direct OpenGL `glGetString(GL_VERSION)` check, removing GLFW as a hard dependency
+- remove redundant zero-ID check in `glsa::deleteVertexArray()`
+
+### Added
+
 ## v1.0.0 - 2026-11-12
 
 ### Added

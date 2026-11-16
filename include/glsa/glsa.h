@@ -253,6 +253,84 @@ void deleteVertexArray(VertexArray& vao);
  */
 void drawArrays(GLenum mode, GLint first, GLsizei count);
 
+
+/**
+ * @brief Create a GPU buffer object.
+ *
+ * @param target Buffer binding target (defaults to GL_ARRAY_BUFFER).
+ * @return A Buffer handle. id is 0 if creation failed.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+[[nodiscard]] Buffer createBuffer(GLenum target = GL_ARRAY_BUFFER);
+
+/**
+ * @brief Bind a buffer object to its target.
+ *
+ * @param buffer The buffer object to bind. Must be a valid handle (non-zero id).
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void bindBuffer(const Buffer& buffer);
+
+/**
+ * @brief Upload raw byte data to a buffer object.
+ *
+ * @param buffer The target buffer object.
+ * @param data   Pointer to the source bytes in CPU memory.
+ * @param size   Number of bytes to upload.
+ * @param usage  Expected usage pattern (defaults to GL_STATIC_DRAW).
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void setBufferData(const Buffer& buffer, const void* data, GLsizeiptr size,
+                   GLenum usage = GL_STATIC_DRAW);
+
+/**
+ * @brief Upload a std::vector to a buffer object.
+ *
+ * @tparam T     Element type.
+ * @param buffer The target buffer object.
+ * @param data   Vector of elements to upload.
+ * @param usage  Expected usage pattern (defaults to GL_STATIC_DRAW).
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+template <typename T>
+void setBufferData(const Buffer& buffer, const std::vector<T>& data,
+                   GLenum usage = GL_STATIC_DRAW) {
+    setBufferData(buffer, data.data(), static_cast<GLsizeiptr>(sizeof(T) * data.size()), usage);
+}
+
+/**
+ * @brief Upload a std::array to a buffer object.
+ *
+ * @tparam T     Element type.
+ * @tparam N     Number of elements in the array.
+ * @param buffer The target buffer object.
+ * @param data   Array of elements to upload.
+ * @param usage  Expected usage pattern (defaults to GL_STATIC_DRAW).
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+template <typename T, size_t N>
+void setBufferData(const Buffer& buffer, const std::array<T, N>& data,
+                   GLenum usage = GL_STATIC_DRAW) {
+    setBufferData(buffer, data.data(), static_cast<GLsizeiptr>(sizeof(T) * N), usage);
+}
+
+/**
+ * @brief Delete a buffer object and release its OpenGL resources.
+ *
+ * After this call the handle's id is reset to zero.
+ *
+ * @param buffer The buffer object to destroy. Its id is set to 0 after deletion.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ * @post buffer.id == 0
+ */
+void deleteBuffer(Buffer& buffer);
+
 } // namespace glsa
 
 
@@ -568,6 +646,69 @@ void drawArrays(GLenum mode, GLint first, GLsizei count) {
     }
 
     glDrawArrays(mode, first, count);
+}
+
+
+[[nodiscard]] Buffer createBuffer(GLenum target) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+            "function.\n");
+        return Buffer{0, target};
+    }
+
+    Buffer buffer{0, target};
+    glGenBuffers(1, &buffer.id);
+    return buffer;
+}
+
+void bindBuffer(const Buffer& buffer) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+            "function.\n");
+        return;
+    }
+
+    if (buffer.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot bind invalid buffer (id == 0).\n");
+        return;
+    }
+
+    glBindBuffer(buffer.target, buffer.id);
+}
+
+void setBufferData(const Buffer& buffer, const void* data, GLsizeiptr size, GLenum usage) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+            "function.\n");
+        return;
+    }
+
+    if (buffer.id == 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Cannot upload data to invalid buffer (id == 0).\n");
+        return;
+    }
+
+    glBindBuffer(buffer.target, buffer.id);
+    glBufferData(buffer.target, size, data, usage);
+}
+
+void deleteBuffer(Buffer& buffer) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+            "function.\n");
+        return;
+    }
+
+    glDeleteBuffers(1, &buffer.id);
+    buffer.id = 0;
 }
 
 } // namespace glsa

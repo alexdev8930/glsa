@@ -54,6 +54,16 @@ struct VertexArray {
     unsigned int id = 0;
 };
 
+/**
+ * @brief Opaque handle to a GPU buffer object (e.g. VBO, EBO).
+ *
+ * The id is zero when the handle is invalid.
+ */
+struct Buffer {
+    unsigned int id = 0;     /**< OpenGL buffer object name. */
+    unsigned int target = 0; /**< OpenGL binding target (e.g. GL_ARRAY_BUFFER). */
+};
+
 } // namespace glsa
 
 #endif // GLSA_GLSA_TYPES_H
