@@ -7,6 +7,7 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
+- Implemented `glsa::drawElements(GLenum, GLsizei, GLenum, const void*)` to wrap `glDrawElements`.
 - Implemented `glsa::shaderPreset(std::string_view name, int version)` in `glsa/glsa.h` with built-in `"basic"`, `"vertex_color"`, `"gradient"`, and `"pulse"` GLSL presets.
 - Added `glsa::Buffer` opaque handle type in `glsa/glsa_types.h`.
 - Implemented `glsa::createBuffer()`, `glsa::bindBuffer()`, `glsa::setBufferData()`, and `glsa::deleteBuffer()` for GPU buffer object management.

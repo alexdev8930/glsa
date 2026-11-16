@@ -28,7 +28,6 @@ See [api_spec.md](docs/api_spec.md) for the API specification.
 
 ## Whats next
 
-- [ ] Indexed drawing (`drawElements`)
 - [ ] Texture loading and binding
 - [ ] Shader hot-reload at runtime
 - [ ] Common shape helpers (`drawRectangle`, `drawCircle`)

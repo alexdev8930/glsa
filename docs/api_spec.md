@@ -249,3 +249,12 @@ Compiles and links one of the built-in GLSL shader presets (`"basic"`, `"vertex_
 ```cpp
 [[nodiscard]] Program shaderPreset(std::string_view name, int version = 330);
 ```
+
+### `glsa::drawElements`
+
+Draws primitives from indexed array data using the currently bound element array buffer. Wraps `glDrawElements`.
+
+```cpp
+void drawElements(GLenum mode, GLsizei count, GLenum type = GL_UNSIGNED_INT,
+                  const void* indices = nullptr);
+```

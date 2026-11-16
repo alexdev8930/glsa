@@ -369,6 +369,20 @@ void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
  */
 [[nodiscard]] Program shaderPreset(std::string_view name, int version = 330);
 
+
+/**
+ * @brief Draw primitives from indexed array data.
+ *
+ * @param mode    Primitive type (e.g. GL_POINTS, GL_TRIANGLES).
+ * @param count   Number of elements to be rendered.
+ * @param type    Type of the values in indices (defaults to GL_UNSIGNED_INT).
+ * @param indices Byte offset into the currently bound element array buffer (defaults to nullptr).
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void drawElements(GLenum mode, GLsizei count, GLenum type = GL_UNSIGNED_INT,
+                  const void* indices = nullptr);
+
 } // namespace glsa
 
 
@@ -856,6 +870,14 @@ Program shaderPreset(std::string_view name, int version) {
     }
 
     return Program{0};
+}
+
+void drawElements(GLenum mode, GLsizei count, GLenum type, const void* indices) {
+    if (!internal::g_is_initialized) {
+        std::fprintf(stderr, "[GLSA ERROR] glsa::drawElements() called before glsa::init().\n");
+        return;
+    }
+    glDrawElements(mode, count, type, indices);
 }
 
 } // namespace glsa
