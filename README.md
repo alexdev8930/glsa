@@ -36,6 +36,8 @@ See [api_spec.md](docs/api_spec.md) for the API specification.
 
 ## Dependency Management
 
+> **Note:** `glsa` itself has **no windowing library dependency** (works with GLFW, SDL2/SDL3, or any existing OpenGL context). When `GLSA_BUILD_EXAMPLES=ON` (enabled by default for standalone builds), `vcpkg` automatically installs `glfw3` to build the example demo.
+
 GLFW and GLM are installed by CMake from `vcpkg.json` in manifest mode (pinned versions). The GLAD loader is pre-generated and checked into `external/glad/` — no Python needed to build. You need CMake 3.21+, Git, vcpkg, and a C++17 compiler. An OpenGL-capable graphics driver is required at runtime.
 
 ### Setup

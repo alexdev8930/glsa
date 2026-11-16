@@ -1,4 +1,16 @@
 cmake_minimum_required(VERSION 3.21...3.25)
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    set(GLSA_IS_TOP_LEVEL ON)
+else()
+    set(GLSA_IS_TOP_LEVEL OFF)
+endif()
+
+option(GLSA_BUILD_EXAMPLES "Build GLSA example applications" ${GLSA_IS_TOP_LEVEL})
+if(GLSA_BUILD_EXAMPLES)
+    list(APPEND VCPKG_MANIFEST_FEATURES "examples")
+endif()
+
 project(GLSA LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -13,4 +25,7 @@ if(CLANG_TIDY_EXE)
 endif()
 
 add_subdirectory(external/glad)
-add_subdirectory(examples)
+
+if(GLSA_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
