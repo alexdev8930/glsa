@@ -30,7 +30,7 @@ See [api_spec.md](docs/api_spec.md) for the API specification.
 
 - [ ] Texture loading and binding
 - [ ] Shader hot-reload at runtime
-- [ ] Common shape helpers (`drawRectangle`, `drawCircle`)
+- [ ] More common shape helpers
 
 ## Dependency Management
 
@@ -115,7 +115,7 @@ A Makefile wrapper runs the CMake commands for you so you don't have to type the
 
 ```bash
 make linux
-make run # Auto-detects your OS, (optional: PLATFORM=linux|windows-msvc|macos)
+make run # Auto-detects your OS, (optional: PLATFORM=linux|windows-msvc|macos). optional: EXAMPLE=<example_executable> 
 ```
 
 Use `windows-msvc` on Windows or `macos` on macOS in place of `linux` (or just run `make` to build for your current OS automatically).

@@ -7,6 +7,9 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
+- Implemented `glsa::drawRectangle(glm::vec2, glm::vec2, const glm::vec4&)` and `glsa::drawCircle(glm::vec2, float, const glm::vec4&, int)` immediate 2D shape helpers in `glsa/glsa.h`.
+- Added `ShapeRendererState` and `g_shape_renderer` in `glsa/detail/glsa_internal.h` to cache internal GPU resources for 2D shape helpers.
+- Added `examples/basic_shapes.cpp` (`glsa_basic_shapes` target) demonstrating immediate rectangle and circle rendering.
 - Implemented `glsa::drawElements(GLenum, GLsizei, GLenum, const void*)` to wrap `glDrawElements`.
 - Implemented `glsa::shaderPreset(std::string_view name, int version)` in `glsa/glsa.h` with built-in `"basic"`, `"vertex_color"`, `"gradient"`, and `"pulse"` GLSL presets.
 - Added `glsa::Buffer` opaque handle type in `glsa/glsa_types.h`.
@@ -17,6 +20,7 @@ Versioning uses [semver](https://semver.org).
 - Updated `examples/example.cpp` to upload triangle vertex data via `glsa::Buffer` and render an aspect-corrected triangle.
 
 ### Changed
+- Updated `Makefile` `run` target to support selecting an executable via `EXAMPLE=<target>` (defaults to `glsa_demo`).
 - Replaced `glfwGetCurrentContext()` in `glsa::init()` with a direct OpenGL `glGetString(GL_VERSION)` check, removing GLFW as a hard dependency.
 - Removed redundant zero-ID check in `glsa::deleteVertexArray()`.
 - Disabled `performance-no-int-to-ptr` in `.clang-tidy` to allow standard OpenGL 3.3 byte-offset casts.

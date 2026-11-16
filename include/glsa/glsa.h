@@ -383,6 +383,37 @@ void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
 void drawElements(GLenum mode, GLsizei count, GLenum type = GL_UNSIGNED_INT,
                   const void* indices = nullptr);
 
+
+/**
+ * @brief Draw a solid 2D axis-aligned rectangle in Normalized Device Coordinates (NDC).
+ *
+ * Automatically manages an internal shader program, vertex array, and buffer
+ * on first call, removing the need for manual VAO/VBO/shader setup for basic 2D quads.
+ *
+ * @param position Center coordinates (x, y) of the rectangle in NDC [-1.0, 1.0].
+ * @param size     Width and height (w, h) of the rectangle in NDC units.
+ * @param color    RGBA fill color applied to the rectangle.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void drawRectangle(glm::vec2 position, glm::vec2 size, const glm::vec4& color);
+
+/**
+ * @brief Draw a solid 2D circle in Normalized Device Coordinates (NDC).
+ *
+ * Approximates a circle using a triangle fan with the specified number of perimeter
+ * segments. Automatically adjusts horizontal radius using glsa::getAspectRatio()
+ * so circles appear round on non-square viewports.
+ *
+ * @param center   Center coordinates (x, y) of the circle in NDC [-1.0, 1.0].
+ * @param radius   Radius of the circle in vertical NDC units.
+ * @param color    RGBA fill color applied to the circle.
+ * @param segments Number of perimeter segments used to approximate the circle (defaults to 32, minimum 3).
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void drawCircle(glm::vec2 center, float radius, const glm::vec4& color, int segments = 32);
+
 } // namespace glsa
 
 
@@ -394,6 +425,33 @@ void drawElements(GLenum mode, GLsizei count, GLenum type = GL_UNSIGNED_INT,
 // clang-format on
 
 namespace glsa {
+
+
+namespace internal {
+
+inline bool ensureShapeRenderer() {
+    if (g_shape_renderer.initialized) {
+        return true;
+    }
+
+    g_shape_renderer.program = shaderPreset("basic", 330);
+    if (g_shape_renderer.program.id == 0) {
+        return false;
+    }
+
+    g_shape_renderer.vao = createVertexArray();
+    bindVertexArray(g_shape_renderer.vao);
+
+    g_shape_renderer.vbo = createBuffer();
+    bindBuffer(g_shape_renderer.vbo);
+    setVertexAttribPointer(0, {3, sizeof(glm::vec3), 0});
+
+    g_shape_renderer.initialized = true;
+    return true;
+}
+
+} // namespace internal
+
 
 [[nodiscard]] bool init(Extent2D initial_extent) {
     if (initial_extent.width <= 0 || initial_extent.height <= 0) {
@@ -878,6 +936,74 @@ void drawElements(GLenum mode, GLsizei count, GLenum type, const void* indices) 
         return;
     }
     glDrawElements(mode, count, type, indices);
+}
+
+
+
+void drawRectangle(glm::vec2 position, glm::vec2 size, const glm::vec4& color) {
+    if (!internal::g_is_initialized) {
+        std::fprintf(stderr, "[GLSA ERROR] glsa::drawRectangle() called before glsa::init().\n");
+        return;
+    }
+
+    if (!internal::ensureShapeRenderer()) {
+        return;
+    }
+
+    const float half_w = size.x * 0.5f;
+    const float half_h = size.y * 0.5f;
+
+    const std::array<glm::vec3, 4> vertices = {
+        glm::vec3(position.x - half_w, position.y - half_h, 0.0f),
+        glm::vec3(position.x + half_w, position.y - half_h, 0.0f),
+        glm::vec3(position.x + half_w, position.y + half_h, 0.0f),
+        glm::vec3(position.x - half_w, position.y + half_h, 0.0f),
+    };
+
+    useProgram(internal::g_shape_renderer.program);
+    setUniform(internal::g_shape_renderer.program, "uColor", color);
+
+    bindVertexArray(internal::g_shape_renderer.vao);
+    setBufferData(internal::g_shape_renderer.vbo, vertices, GL_DYNAMIC_DRAW);
+    drawArrays(GL_TRIANGLE_FAN, 0, 4);
+}
+
+void drawCircle(glm::vec2 center, float radius, const glm::vec4& color, int segments) {
+    if (!internal::g_is_initialized) {
+        std::fprintf(stderr, "[GLSA ERROR] glsa::drawCircle() called before glsa::init().\n");
+        return;
+    }
+
+    if (segments < 3) {
+        std::fprintf(stderr, "[GLSA ERROR] glsa::drawCircle() requires at least 3 segments.\n");
+        return;
+    }
+
+    if (!internal::ensureShapeRenderer()) {
+        return;
+    }
+
+    constexpr float TWO_PI = 6.28318530717958647692f;
+    const float aspect = getAspectRatio();
+    const float radius_x = radius / aspect;
+
+    std::vector<glm::vec3> vertices;
+    vertices.reserve(static_cast<std::size_t>(segments) + 2);
+    vertices.emplace_back(center.x, center.y, 0.0f);
+
+    for (int i = 0; i <= segments; ++i) {
+        const float theta = (static_cast<float>(i) / static_cast<float>(segments)) * TWO_PI;
+        const float x = center.x + (radius_x * std::cos(theta));
+        const float y = center.y + (radius * std::sin(theta));
+        vertices.emplace_back(x, y, 0.0f);
+    }
+
+    useProgram(internal::g_shape_renderer.program);
+    setUniform(internal::g_shape_renderer.program, "uColor", color);
+
+    bindVertexArray(internal::g_shape_renderer.vao);
+    setBufferData(internal::g_shape_renderer.vbo, vertices, GL_DYNAMIC_DRAW);
+    drawArrays(GL_TRIANGLE_FAN, 0, static_cast<GLsizei>(vertices.size()));
 }
 
 } // namespace glsa

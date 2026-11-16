@@ -258,3 +258,19 @@ Draws primitives from indexed array data using the currently bound element array
 void drawElements(GLenum mode, GLsizei count, GLenum type = GL_UNSIGNED_INT,
                   const void* indices = nullptr);
 ```
+
+### `glsa::drawRectangle`
+
+Draws a solid 2D axis-aligned rectangle centered at `position` with dimensions `size` in Normalized Device Coordinates. Manages its own internal shader program, vertex array, and buffer automatically.
+
+```cpp
+void drawRectangle(glm::vec2 position, glm::vec2 size, const glm::vec4& color);
+```
+
+### `glsa::drawCircle`
+
+Draws a solid 2D circle centered at `center` with vertical NDC `radius`, automatically compensating for the active viewport aspect ratio. Approximates the perimeter using `segments` subdivisions (defaults to `32`).
+
+```cpp
+void drawCircle(glm::vec2 center, float radius, const glm::vec4& color, int segments = 32);
+```

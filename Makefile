@@ -10,6 +10,8 @@ else
     endif
 endif
 
+EXAMPLE ?= glsa_basic_shapes
+
 .PHONY: all linux windows-msvc macos clean run
 
 all: $(PLATFORM)
@@ -30,26 +32,26 @@ clean:
 run:
 	@case "$(PLATFORM)" in \
 	linux) \
-		if [ -f "build/linux/examples/glsa_demo" ]; then \
-			./build/linux/examples/glsa_demo; \
+		if [ -f "build/linux/examples/$(EXAMPLE)" ]; then \
+			./build/linux/examples/$(EXAMPLE); \
 		else \
-			echo "Error: Linux build not found."; \
+			echo "Error: Linux build not found ($(EXAMPLE))."; \
 			exit 1; \
 		fi; \
 		;; \
 	windows-msvc) \
-		if [ -f "build/windows-msvc/examples/glsa_demo.exe" ]; then \
-			./build/windows-msvc/examples/glsa_demo.exe; \
+		if [ -f "build/windows-msvc/examples/$(EXAMPLE).exe" ]; then \
+			./build/windows-msvc/examples/$(EXAMPLE).exe; \
 		else \
-			echo "Error: Windows build not found."; \
+			echo "Error: Windows build not found ($(EXAMPLE).exe)."; \
 			exit 1; \
 		fi; \
 		;; \
 	macos) \
-		if [ -f "build/macos/examples/glsa_demo" ]; then \
-			./build/macos/examples/glsa_demo; \
+		if [ -f "build/macos/examples/$(EXAMPLE)" ]; then \
+			./build/macos/examples/$(EXAMPLE); \
 		else \
-			echo "Error: macOS build not found."; \
+			echo "Error: macOS build not found ($(EXAMPLE))."; \
 			exit 1; \
 		fi; \
 		;; \
