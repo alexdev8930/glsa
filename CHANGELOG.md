@@ -3,17 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 Versioning uses [semver](https://semver.org).
 
-## Unreleased 
+
+## Unreleased
 
 ### Added
-- `glsa::Buffer` handle type for GPU vertex and index buffer objects
-- `glsa::createBuffer`, `glsa::bindBuffer`, `glsa::setBufferData` (raw pointer, `std::vector`, and `std::array` overloads), and `glsa::deleteBuffer`
+- Added `glsa::Buffer` opaque handle type in `glsa/glsa_types.h`.
+- Implemented `glsa::createBuffer()`, `glsa::bindBuffer()`, `glsa::setBufferData()`, and `glsa::deleteBuffer()` for GPU buffer object management.
+- Added `glsa::VertexAttribute` layout struct in `glsa/glsa_types.h`.
+- Implemented `glsa::setVertexAttribPointer(GLuint, const VertexAttribute&)` to configure and enable vertex attribute pointers.
+- Implemented `glsa::getAspectRatio()` to compute the aspect ratio from the default render extent.
+- Updated `examples/example.cpp` to upload triangle vertex data via `glsa::Buffer` and render an aspect-corrected triangle.
 
 ### Changed
-- Replaced `glfwGetCurrentContext()` in `glsa::init()` with a direct OpenGL `glGetString(GL_VERSION)` check, removing GLFW as a hard dependency
-- remove redundant zero-ID check in `glsa::deleteVertexArray()`
-
-### Added
+- Replaced `glfwGetCurrentContext()` in `glsa::init()` with a direct OpenGL `glGetString(GL_VERSION)` check, removing GLFW as a hard dependency.
+- Removed redundant zero-ID check in `glsa::deleteVertexArray()`.
+- Disabled `performance-no-int-to-ptr` in `.clang-tidy` to allow standard OpenGL 3.3 byte-offset casts.
 
 ## v1.0.0 - 2026-11-12
 

@@ -49,6 +49,20 @@ struct Buffer {
 };
 ```
 
+### `glsa::VertexAttribute`
+
+Layout description for a single vertex attribute in a vertex array object.
+
+```cpp
+struct VertexAttribute {
+    int size = 0;
+    int stride = 0;
+    std::size_t offset = 0;
+    unsigned int type = 0x1406; // GL_FLOAT
+    bool normalized = false;
+};
+```
+
 ## Core API
 
 ### `glsa::init`
@@ -65,6 +79,14 @@ Returns the default render extent stored during `glsa::init`.
 
 ```cpp
 Extent2D getDefaultExtent();
+```
+
+### `glsa::getAspectRatio`
+
+Returns the aspect ratio (`width / height`) of the default render extent stored during `glsa::init`, or `1.0f` if uninitialized.
+
+```cpp
+[[nodiscard]] float getAspectRatio();
 ```
 
 ### `glsa::loadShaderSource`
@@ -210,4 +232,12 @@ Deletes a buffer object and releases its OpenGL resources. Resets `id` to `0`.
 
 ```cpp
 void deleteBuffer(Buffer& buffer);
+```
+
+### `glsa::setVertexAttribPointer`
+
+Configures and enables a vertex attribute pointer on the currently bound vertex array object.
+
+```cpp
+void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
 ```

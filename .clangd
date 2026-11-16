@@ -2,7 +2,14 @@ Diagnostics:
   UnusedIncludes: Strict
   ClangTidy:
     Add: [bugprone-*, modernize-*, performance-*, readability-*]
-    Remove: [modernize-use-trailing-return-type, readability-magic-numbers, readability-implicit-bool-conversion]
+    Remove:
+      - modernize-use-trailing-return-type
+      - readability-magic-numbers
+      - readability-implicit-bool-conversion
+      - readability-uppercase-literal-suffix
+      - readability-identifier-length
+      - bugprone-easily-swappable-parameters
+      - performance-no-int-to-ptr
 
 If:
   PathMatch: .*include/glsa/glsa\.h

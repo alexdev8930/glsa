@@ -103,6 +103,14 @@ namespace glsa {
  */
 Extent2D getDefaultExtent();
 
+/**
+ * @brief Get the aspect ratio (width / height) of the default render extent.
+ *
+ * @return Aspect ratio as a float, or 1.0f if not initialized.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+[[nodiscard]] float getAspectRatio();
 
 /**
  * @brief Load a shader source file from disk into a string.
@@ -331,6 +339,17 @@ void setBufferData(const Buffer& buffer, const std::array<T, N>& data,
  */
 void deleteBuffer(Buffer& buffer);
 
+
+/**
+ * @brief Configure and enable a vertex attribute pointer on the currently bound VAO.
+ *
+ * @param index     Attribute location in the vertex shader (`layout(location = index)`).
+ * @param attribute Layout description (component count, stride, byte offset, type, normalized).
+ *
+ * @pre glsa::init() must have been called successfully first, and a VAO and VBO must be bound.
+ */
+void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
+
 } // namespace glsa
 
 
@@ -369,6 +388,22 @@ Extent2D getDefaultExtent() {
     return glsa::internal::g_default_extent;
 }
 
+[[nodiscard]] float getAspectRatio() {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+            "function.\n");
+        return 1.0f;
+    }
+
+    if (glsa::internal::g_default_extent.height <= 0) {
+        return 1.0f;
+    }
+
+    return static_cast<float>(glsa::internal::g_default_extent.width) /
+           static_cast<float>(glsa::internal::g_default_extent.height);
+}
 
 std::string loadShaderSource(const char* filepath) {
     if (filepath == nullptr) {
@@ -709,6 +744,34 @@ void deleteBuffer(Buffer& buffer) {
 
     glDeleteBuffers(1, &buffer.id);
     buffer.id = 0;
+}
+
+
+void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute) {
+    if (!glsa::internal::g_is_initialized) {
+        std::fprintf(
+            stderr,
+            "[GLSA ERROR] Library must be initialized via glsa::init() before calling this "
+            "function.\n");
+        return;
+    }
+
+    if (attribute.size < 1 || attribute.size > 4) {
+        std::fprintf(stderr,
+                     "[GLSA ERROR] Invalid vertex attribute size (%d). Must be between 1 and 4.\n",
+                     attribute.size);
+        return;
+    }
+
+    if (attribute.stride < 0) {
+        std::fprintf(stderr, "[GLSA ERROR] Vertex attribute stride cannot be negative.\n");
+        return;
+    }
+
+    glVertexAttribPointer(index, attribute.size, attribute.type,
+                          attribute.normalized ? GL_TRUE : GL_FALSE, attribute.stride,
+                          reinterpret_cast<const void*>(attribute.offset)); 
+    glEnableVertexAttribArray(index);
 }
 
 } // namespace glsa

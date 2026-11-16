@@ -64,6 +64,17 @@ struct Buffer {
     unsigned int target = 0; /**< OpenGL binding target (e.g. GL_ARRAY_BUFFER). */
 };
 
+/**
+ * @brief Layout description for a single vertex attribute in a VAO.
+ */
+struct VertexAttribute {
+    int size = 0;               /**< Number of components per vertex (1, 2, 3, or 4). */
+    int stride = 0;             /**< Byte offset between consecutive vertices. */
+    std::size_t offset = 0;     /**< Byte offset of the first component in the buffer. */
+    unsigned int type = 0x1406; /**< Component data type (defaults to GL_FLOAT). */
+    bool normalized = false;    /**< Whether fixed-point values should be normalized. */
+};
+
 } // namespace glsa
 
 #endif // GLSA_GLSA_TYPES_H
