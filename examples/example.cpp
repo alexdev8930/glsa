@@ -44,6 +44,8 @@
  * @license MIT
  */
 
+#include <array> // For Windows compatibility
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
