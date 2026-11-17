@@ -34,6 +34,7 @@
 #include <string_view>
 #include <vector>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "glsa_types.h"
 
 /* MSVC doesn't update __cplusplus by default, so we check _MSVC_LANG instead */
@@ -404,6 +405,23 @@ void drawElements(GLenum mode, GLsizei count, GLenum type = GL_UNSIGNED_INT,
 void drawRectangle(glm::vec2 position, glm::vec2 size, const glm::vec4& color);
 
 /**
+ * @brief Draw a solid 2D axis-aligned rectangle in screen pixel coordinates.
+ *
+ * Uses a top-left origin (0, 0) mapped to the default render extent stored during
+ * glsa::init(), eliminating manual orthographic projection and VAO/VBO setup.
+ *
+ * @param x      Top-left X coordinate of the rectangle in pixels.
+ * @param y      Top-left Y coordinate of the rectangle in pixels.
+ * @param width  Width of the rectangle in pixels.
+ * @param height Height of the rectangle in pixels.
+ * @param color  RGBA fill color applied to the rectangle.
+ *
+ * @pre glsa::init() must have been called successfully first.
+ */
+void drawRectangle(int x, int y, int width, int height, const glm::vec4& color);
+
+
+/**
  * @brief Draw a solid 2D circle in Normalized Device Coordinates (NDC).
  *
  * Approximates a circle using a triangle fan with the specified number of perimeter
@@ -440,7 +458,7 @@ inline bool ensureShapeRenderer() {
         return true;
     }
 
-    g_shape_renderer.program = shaderPreset("basic", 330);
+    g_shape_renderer.program = shaderPreset("mvp", 330);
     if (g_shape_renderer.program.id == 0) {
         return false;
     }
@@ -958,6 +976,24 @@ Program shaderPreset(std::string_view name, int version) {
         return createProgram({vert, frag});
     }
 
+    if (name == "mvp") {
+        std::string vert = header + R"(
+            layout (location = 0) in vec3 aPos;
+            uniform mat4 uMVP;
+            void main() {
+                gl_Position = uMVP * vec4(aPos, 1.0);
+            }
+        )";
+        std::string frag = header + R"(
+            out vec4 FragColor;
+            uniform vec4 uColor;
+            void main() {
+                FragColor = uColor;
+            }
+        )";
+        return createProgram({vert, frag});
+    }
+
     return Program{0};
 }
 
@@ -992,6 +1028,42 @@ void drawRectangle(glm::vec2 position, glm::vec2 size, const glm::vec4& color) {
     };
 
     useProgram(internal::g_shape_renderer.program);
+    setUniform(internal::g_shape_renderer.program, "uMVP", glm::mat4(1.0f));
+    setUniform(internal::g_shape_renderer.program, "uColor", color);
+
+    bindVertexArray(internal::g_shape_renderer.vao);
+    setBufferData(internal::g_shape_renderer.vbo, vertices, GL_DYNAMIC_DRAW);
+    drawArrays(GL_TRIANGLE_FAN, 0, 4);
+}
+
+void drawRectangle(int x, int y, int width, int height, const glm::vec4& color) {
+    if (!internal::g_is_initialized) {
+        std::fprintf(stderr, "[GLSA ERROR] glsa::drawRectangle() called before glsa::init().\n");
+        return;
+    }
+
+    if (!internal::ensureShapeRenderer()) {
+        return;
+    }
+
+    const auto screen_w = static_cast<float>(internal::g_default_extent.width);
+    const auto screen_h = static_cast<float>(internal::g_default_extent.height);
+    const glm::mat4 projection = glm::ortho(0.0f, screen_w, screen_h, 0.0f, -1.0f, 1.0f);
+
+    const auto fx = static_cast<float>(x);
+    const auto fy = static_cast<float>(y);
+    const auto fw = static_cast<float>(width);
+    const auto fh = static_cast<float>(height);
+
+    const std::array<glm::vec3, 4> vertices = {
+        glm::vec3(fx,      fy,      0.0f),
+        glm::vec3(fx + fw, fy,      0.0f),
+        glm::vec3(fx + fw, fy + fh, 0.0f),
+        glm::vec3(fx,      fy + fh, 0.0f),
+    };
+
+    useProgram(internal::g_shape_renderer.program);
+    setUniform(internal::g_shape_renderer.program, "uMVP", projection);
     setUniform(internal::g_shape_renderer.program, "uColor", color);
 
     bindVertexArray(internal::g_shape_renderer.vao);
@@ -1006,7 +1078,7 @@ void drawCircle(glm::vec2 center, float radius, const glm::vec4& color, int segm
     }
 
     if (segments < 3) {
-        std::fprintf(stderr, "[GLSA ERROR] glsa::drawCircle() requires at least 3 segments.\n");
+        std::fprintf(stderr, "[GLSA ERROR] glsa::drawCircle() requires segments >= 3.\n");
         return;
     }
 
@@ -1014,7 +1086,6 @@ void drawCircle(glm::vec2 center, float radius, const glm::vec4& color, int segm
         return;
     }
 
-    constexpr float TWO_PI = 6.28318530717958647692f;
     const float aspect = getAspectRatio();
     const float radius_x = radius / aspect;
 
@@ -1022,14 +1093,18 @@ void drawCircle(glm::vec2 center, float radius, const glm::vec4& color, int segm
     vertices.reserve(static_cast<std::size_t>(segments) + 2);
     vertices.emplace_back(center.x, center.y, 0.0f);
 
+    const float step = 2.0f * 3.14159265358979323846f / static_cast<float>(segments);
     for (int i = 0; i <= segments; ++i) {
-        const float theta = (static_cast<float>(i) / static_cast<float>(segments)) * TWO_PI;
-        const float x = center.x + (radius_x * std::cos(theta));
-        const float y = center.y + (radius * std::sin(theta));
-        vertices.emplace_back(x, y, 0.0f);
+        const float angle = step * static_cast<float>(i);
+        vertices.emplace_back(
+            center.x + (std::cos(angle) * radius_x),
+            center.y + (std::sin(angle) * radius),
+            0.0f
+        );
     }
 
     useProgram(internal::g_shape_renderer.program);
+    setUniform(internal::g_shape_renderer.program, "uMVP", glm::mat4(1.0f));
     setUniform(internal::g_shape_renderer.program, "uColor", color);
 
     bindVertexArray(internal::g_shape_renderer.vao);

@@ -7,6 +7,8 @@ Versioning uses [semver](https://semver.org).
 ## Unreleased
 
 ### Added
+- Implemented `"mvp"` GLSL preset in `glsa::shaderPreset(std::string_view name, int version)` with `uMVP` (`mat4`) transform support.
+- Implemented `glsa::drawRectangle(int, int, int, int, const glm::vec4&)` overload in `glsa/glsa.h` for rendering 2D rectangles in screen pixel coordinates with a top-left origin.
 - Implemented `glsa::drawRectangle(glm::vec2, glm::vec2, const glm::vec4&)` and `glsa::drawCircle(glm::vec2, float, const glm::vec4&, int)` immediate 2D shape helpers in `glsa/glsa.h`.
 - Added `ShapeRendererState` and `g_shape_renderer` in `glsa/detail/glsa_internal.h` to cache internal GPU resources for 2D shape helpers.
 - Added `examples/basic_shapes.cpp` (`glsa_basic_shapes` target) demonstrating immediate rectangle and circle rendering.

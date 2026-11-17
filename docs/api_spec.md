@@ -244,7 +244,7 @@ void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
 
 ### `glsa::shaderPreset`
 
-Compiles and links one of the built-in GLSL shader presets (`"basic"`, `"vertex_color"`, `"gradient"`, or `"pulse"`) using the specified GLSL version (defaults to `330`). Returns a `Program` handle. The id is zero if the preset name is unknown or compilation failed.
+Compiles and links one of the built-in GLSL shader presets (`"basic"`, `"vertex_color"`, `"gradient"`, `"pulse"` or `"mvp"`) using the specified GLSL version (defaults to `330`). Returns a `Program` handle. The id is zero if the preset name is unknown or compilation failed.
 
 ```cpp
 [[nodiscard]] Program shaderPreset(std::string_view name, int version = 330);
@@ -261,10 +261,11 @@ void drawElements(GLenum mode, GLsizei count, GLenum type = GL_UNSIGNED_INT,
 
 ### `glsa::drawRectangle`
 
-Draws a solid 2D axis-aligned rectangle centered at `position` with dimensions `size` in Normalized Device Coordinates. Manages its own internal shader program, vertex array, and buffer automatically.
+Draws a solid 2D axis-aligned rectangle. Passing `glm::vec2` for `position` and `size` draws the rectangle centered at `position` in Normalized Device Coordinates (`[-1.0, 1.0]`). Passing `int x, int y, int width, int height` draws the rectangle with its top-left corner at `(x, y)` in screen pixel coordinates (`0` to `width`/`height`) using the extent passed to `glsa::init`. Manages its own internal shader program, vertex array, and buffer automatically.
 
 ```cpp
 void drawRectangle(glm::vec2 position, glm::vec2 size, const glm::vec4& color);
+void drawRectangle(int x, int y, int width, int height, const glm::vec4& color);
 ```
 
 ### `glsa::drawCircle`
