@@ -25,6 +25,7 @@
 #ifndef GLSA_GLSA_H
 #define GLSA_GLSA_H
 
+#include <array>
 #include <cstddef>
 #include <cstdio>
 #include <fstream>
@@ -357,7 +358,8 @@ void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute);
  * Supported preset names:
  * - "basic": Solid flat color (aPos at location 0, uniform vec4 uColor).
  * - "vertex_color": Per-vertex RGB color (aPos at location 0, aColor at location 1).
- * - "gradient": Vertical two-color blend (aPos at location 0, uniform vec4 uColorBottom, uColorTop).
+ * - "gradient": Vertical two-color blend (aPos at location 0, uniform vec4 uColorBottom,
+ * uColorTop).
  * - "pulse": Animated brightness pulse (aPos at location 0, uniform vec4 uColor, float uTime).
  *
  * @param name    Name of the built-in preset to compile.
@@ -408,7 +410,8 @@ void drawRectangle(glm::vec2 position, glm::vec2 size, const glm::vec4& color);
  * @param center   Center coordinates (x, y) of the circle in NDC [-1.0, 1.0].
  * @param radius   Radius of the circle in vertical NDC units.
  * @param color    RGBA fill color applied to the circle.
- * @param segments Number of perimeter segments used to approximate the circle (defaults to 32, minimum 3).
+ * @param segments Number of perimeter segments used to approximate the circle (defaults to 32,
+ * minimum 3).
  *
  * @pre glsa::init() must have been called successfully first.
  */
@@ -861,7 +864,7 @@ void setVertexAttribPointer(GLuint index, const VertexAttribute& attribute) {
 
     glVertexAttribPointer(index, attribute.size, attribute.type,
                           attribute.normalized ? GL_TRUE : GL_FALSE, attribute.stride,
-                          reinterpret_cast<const void*>(attribute.offset)); 
+                          reinterpret_cast<const void*>(attribute.offset));
     glEnableVertexAttribArray(index);
 }
 
