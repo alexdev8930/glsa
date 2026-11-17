@@ -929,6 +929,31 @@ Program shaderPreset(std::string_view name, int version) {
         )";
         return createProgram({vert, frag});
     }
+    if (name == "pulse") {
+        std::string vert = header + R"(
+            layout (location = 0) in vec3 aPos;
+
+            void main() {
+                gl_Position = vec4(aPos, 1.0);
+            }
+        )";
+
+        std::string frag = header + R"(
+            out vec4 FragColor;
+
+            uniform vec4 uColor;
+            uniform float uTime;
+
+            void main() {
+                float pulse = 0.5 + 0.5 * sin(uTime * 2.0);
+                float brightness = mix(0.35, 1.0, pulse);
+
+                FragColor = vec4(uColor.rgb * brightness, uColor.a);
+            }
+        )";
+
+        return createProgram({vert, frag});
+    }
 
     return Program{0};
 }

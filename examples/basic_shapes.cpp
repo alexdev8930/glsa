@@ -85,10 +85,10 @@ int main() {
         glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Draw an aspect-corrected square on the left
+        // Draw a square on the left
         glsa::drawRectangle({-0.45f, 0.0f}, {0.4f / aspect, 0.4f}, glsa::colors::PMS_178);
 
-        // Draw an aspect-corrected circle on the right
+        // Draw a circle on the right
         glsa::drawCircle({0.45f, 0.0f}, 0.22f, glsa::colors::PMS_542);
 
         glfwSwapBuffers(window);
