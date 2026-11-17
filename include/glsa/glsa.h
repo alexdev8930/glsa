@@ -26,10 +26,13 @@
 #define GLSA_GLSA_H
 
 #include <array>
+#include <cmath>
 #include <cstddef>
 #include <cstdio>
 #include <fstream>
 #include <string>
+#include <string_view>
+#include <vector>
 #include <glm/glm.hpp>
 #include "glsa_types.h"
 

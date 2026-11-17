@@ -11,6 +11,9 @@ Diagnostics:
       - bugprone-easily-swappable-parameters
       - performance-no-int-to-ptr
 
+Completion:
+  HeaderInsertion: Never
+
 If:
   PathMatch: .*include/glsa/glsa\.h
 CompileFlags:
