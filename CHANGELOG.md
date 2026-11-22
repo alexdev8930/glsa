@@ -4,7 +4,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 Versioning uses [semver](https://semver.org).
 
 
-## Unreleased
+## v1.1.0 - 2026-11-22
 
 ### Added
 - Implemented `"mvp"` GLSL preset in `glsa::shaderPreset(std::string_view name, int version)` with `uMVP` (`mat4`) transform support.
